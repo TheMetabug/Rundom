@@ -117,3 +117,6 @@ UpgradeLog*.XML
 
 # NuGet
 packages/
+
+# Svn crap from yam2d
+.svn/
