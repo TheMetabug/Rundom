@@ -1,0 +1,27 @@
+﻿Build started 23.1.2013 10:06:47.
+     1>Project "I:\Kotiprojektit\RundomTesti\RundomTesti\RundomTesti.vcxproj" on node 3 (build target(s)).
+     1>PrepareForBuild:
+         Creating directory "I:\Kotiprojektit\RundomTesti\Release\".
+       InitializeBuildStatus:
+         Creating "Release\MapFromScratch.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\TTI12SAskoL\Desktop\yam2d\\engine\include\ /IC:\Users\TTI12SAskoL\Desktop\yam2d\\engine\external\ /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>main.cpp(215): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
+     1>main.cpp(219): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"I:\Kotiprojektit\RundomTesti\Release\MapFromScratch.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\TTI12SAskoL\Desktop\yam2d\\engine\lib\win32 libEGL.lib libGLES_cm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\MapFromScratch.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"I:\Kotiprojektit\RundomTesti\Release\MapFromScratch.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"I:\Kotiprojektit\RundomTesti\Release\MapFromScratch.lib" /MACHINE:X86 Release\main.obj
+         I:\Kotiprojektit\yam2d\engine\lib\win32\Release\yam2d.lib
+         Generating code
+         Finished generating code
+         RundomTesti.vcxproj -> I:\Kotiprojektit\RundomTesti\Release\MapFromScratch.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"I:\Kotiprojektit\RundomTesti\Release\MapFromScratch.exe;#1" /manifest Release\MapFromScratch.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\MapFromScratch.unsuccessfulbuild".
+         Touching "Release\MapFromScratch.lastbuildstate".
+     1>Done Building Project "I:\Kotiprojektit\RundomTesti\RundomTesti\RundomTesti.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.06
