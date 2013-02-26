@@ -1,9 +1,9 @@
 #include "Danger.h"
-
 using namespace yam2d;
 
 float hyppyvoimaD = 0;
 double countd = 0;
+
 Danger::Danger()
 {
 }
@@ -13,20 +13,50 @@ Danger::~Danger()
 {
 }
 
-Danger::Danger(yam2d::Texture* _texture, yam2d::vec2 _position, float _speed, float _speedy,
-						int _width, int _height, float _xspawn, float _yspawn)
+Danger::Danger(Texture* _texture, vec2 _position, float _speed, float _speedy,
+						int _width, int _height, float _xspawn, float _yspawn, int _frameCount,
+						float _frameRate)
 {
+	SpriteSheet* spriteSheet = SpriteSheet::generateSpriteSheet(_texture,_width,_height,0,0); 
 	Texture* texture(_texture);
 	texture->setTransparentColor(255,255,255);
-	danger = new SpriteGameObject(0, texture);
+	danger = new AnimatedSpriteGameObject(0, spriteSheet);
 	danger->setPosition(_position);
-	danger->setSize(50,50);
+	danger->setSize(_width,_height);
 	speed = _speed;
 	speedy = _speedy;
 	yspawn = _yspawn;
 	xspawn = _xspawn;
+	frameRate = _frameRate;
+	frameCount = _frameCount;
 	hitx = 0;
 	hity = 0;
+
+	int numClipsPerAnimation = _frameCount;
+
+	float animationFrameRate = _frameRate;
+	for( int i=0; i<4; ++i )
+	{
+		std::vector<int> indices;
+		indices.resize(numClipsPerAnimation);
+		for( size_t j=0; j<indices.size(); ++j )
+		{
+			indices[j] = numClipsPerAnimation*i + j;
+		}
+
+		// Add looping animation.
+		if(i <2)
+		{
+			danger->addAnimation(i, SpriteAnimation::SpriteAnimationClip(indices,animationFrameRate, 1.0f, true));
+		}
+		else
+		{
+			danger->addAnimation(i, SpriteAnimation::SpriteAnimationClip(indices,animationFrameRate, 1.0f, false));
+		}
+	}
+	danger->setPosition(_position);
+	danger->setActiveAnimation(0);
+
 }
 void Danger::Update(float deltaTime)
 {

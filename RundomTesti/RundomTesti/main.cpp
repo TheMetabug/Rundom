@@ -145,18 +145,18 @@ bool init ( ESContext *esContext )
 //				__LAYER1__
 	map->addLayer(Map::MAPLAYER1, objectLayer1 );
 
-	Texture* texturebgD =new Texture("dangerlady.png");
-	danger = Danger(texturebgD,vec2(16,1), 8.5f, 10, 50.0f, 50.0f, 13.0f, 1);
+	Texture* texturebgD =new Texture("dangerlady1.png");
+	danger = Danger(texturebgD,vec2(16,1), 8.5f, 10, 50.0f, 50.0f, 13.0f, 1, 4, 10.0f);
 	objectLayer1->addGameObject(danger.danger);
 	dangers.push_back(danger);
 
 	Texture* texturebgDD =new Texture("danger.png");
-	danger2 = Danger(texturebgDD,vec2(16,3.2f), 3.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f);
+	danger2 = Danger(texturebgDD,vec2(16,3.2f), 3.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f, 1, 20.0f);
 	objectLayer1->addGameObject(danger2.danger);
 	dangers.push_back(danger2);
 
 	Texture* texturebgDDD =new Texture("danger.png");
-	danger3 = Danger(texturebgDDD,vec2(16,3.2f), 15.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f);
+	danger3 = Danger(texturebgDDD,vec2(16,3.2f), 15.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f, 1, 20.0f);
 	objectLayer1->addGameObject(danger3.danger);
 	dangers.push_back(danger3);
 

@@ -22,8 +22,6 @@ public:
 
 	int die;
 	void Update(float deltaTime);
-	void Draw();
-	void Init();
 	double hitx;
 	double hity;
 	void DangerHit();
