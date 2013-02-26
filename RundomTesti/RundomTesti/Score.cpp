@@ -1,0 +1,95 @@
+#include "Score.h"
+
+
+#include <sstream>
+template <class T>
+std::string to_string(T t)
+{
+        std::stringstream s;
+        s << t;
+        return s.str();
+}
+
+
+// Kaytä namespacea yam2d, niin ei tarvitse aina
+// explisiittisesti määritellä yam2d:: aina jokaisen 
+// yam2d-tietotyypin alussa
+using namespace yam2d;
+
+Score::Score(
+	const char* fontTextureFileName, 
+	const char* fontDatFileName)
+{
+	// Create new sprite batch group. This must be deleted at deinit.
+	m_batch = new SpriteBatchGroup();
+
+	// Load font texture. Made with font creation tool like bitmap font builder.
+	m_fontTexture = new Texture(fontTextureFileName);
+
+	// Create font clip areas (sprite sheet), from dat file and texture. Dat-file is made with bitmap font builder.
+	m_font = SpriteSheet::autoFindFontFromTexture(m_fontTexture,fontDatFileName);
+
+	// Create new texts using font
+	m_totalTimeText		= new Text(m_font);
+	m_fpsText			= new Text(m_font);
+
+	totalTimeText		= new TextGameObject(0,m_totalTimeText);
+	fpsText				= new TextGameObject(0,m_fpsText);
+
+	// Set total time to 0
+	m_totalTime = 0.0f;
+	m_frameCount = 0;
+
+	m_fps = 0.0f;
+	m_frameRateCounter = 0.0f;
+	m_frameRateFrameCounter = 0;
+}
+
+
+Score::~Score(void)
+{
+}
+
+void Score::update(float deltaTime)
+{
+	
+
+	// Increase total time
+	m_totalTime += deltaTime;
+	m_frameRateCounter += deltaTime;
+
+	if( m_frameRateCounter > 1.0f )
+	{
+		m_fps = float(m_frameRateFrameCounter) / m_frameRateCounter;
+
+		m_fpsText->setText(	"FPS: "	+ to_string(m_fps) );
+		// Nollaa laskurit
+		m_frameRateCounter = 0.0f;
+		m_frameRateFrameCounter = 0;
+
+		// Nollaa sprite batchin laskurit
+		SpriteBatch:: resetStatsValues();
+	}
+
+	// Set text.
+	m_totalTimeText->setText( "Score : " + to_string(floor(m_totalTime*100)) );
+
+	
+}
+
+void Score::render(float posX, float posY)
+{
+	// Kasvata frame counttia
+	++m_frameCount;
+	++m_frameRateFrameCounter;
+
+	// Clear sprite before add new dynamic sprites.
+	m_batch->clear();
+
+	// Add text to position posX + textwidth*0.5, posX
+	//m_batch->addText(m_fontTexture, m_totalTimeText, vec2((float)int(0.5f*m_totalTimeText->getWidth()+posX+0.5f),				posY),			0);
+	//m_batch->addText(m_fontTexture, m_fpsText, vec2((float)int(0.5f*m_fpsText->getWidth()+posX+0.5f),					posY-60.0f),	0);
+	//
+	// Render
+	m_batch->render();
+}

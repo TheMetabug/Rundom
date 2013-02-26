@@ -13,7 +13,7 @@
 #include "Danger.h"
 #include "Spark.h"
 #include "Health.h"
-
+#include "Score.h"
 
 using namespace yam2d;
 
@@ -42,6 +42,8 @@ BackGround stepground1;
 BackGround stepground2;
 BackGround menu;
 BackGround dead;
+Score* score;
+Score* fps;
 
 
 SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, float sizeX, float sizeY, bool isWhiteTransparentColor = false)
@@ -122,6 +124,7 @@ bool init ( ESContext *esContext )
 	backgroundLayer->addGameObject(background2.background);
 	backgrounds.push_back(background2);
 
+// CREATELAYERS
 	Layer* objectLayer0 = new Layer(map, "Objects", 1.0f, true, false);
 	Layer* objectLayer1 = new Layer(map, "Objects", 1.0f, true, false);
 	Layer* objectLayer2 = new Layer(map, "Objects", 1.0f, true, false);
@@ -207,6 +210,13 @@ bool init ( ESContext *esContext )
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
 
+	score = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat");
+	score->totalTimeText->setPosition(vec2(5,4));
+	objectLayerM->addGameObject(score->totalTimeText);
+
+	fps = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat");
+	fps->fpsText->setPosition(vec2(-5,-4));
+	objectLayerM->addGameObject(fps->fpsText);
 		
 	return true;
 }
@@ -244,6 +254,8 @@ void update( ESContext* ctx, float deltaTime )
 			player.Update(deltaTime);
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
+			score->update(deltaTime);
+			fps->update(deltaTime);
 			
 			// Update map. this will update all GameObjects inside a map layers.
 			map->update(deltaTime);
@@ -264,7 +276,7 @@ void update( ESContext* ctx, float deltaTime )
 					dangers[i].Respawn();
 					player.DangerHit();
 					spark1.Hit();
-					spark1.spark->setPosition(dangers[i].hitx,dangers[i].hity);
+					spark1.spark->setPosition((float)dangers[i].hitx,(float)dangers[i].hity);
 				}
 			}
 		// death by hippo
@@ -296,6 +308,7 @@ void update( ESContext* ctx, float deltaTime )
 		{
 			gameState = 1;
 			player.player->setPosition(-1,2.5);
+			score->m_totalTime = 0;
 		}
 	}
 
@@ -311,6 +324,8 @@ void draw ( ESContext *esContext )
 
 	// Set screen size to camera.
 	map->getCamera()->setScreenSize(esContext->width,esContext->height); 
+
+	score->render(0.0f,0.0f);
 
 	// Render map and all of its layers containing GameObjects to screen.
 	map->render();
