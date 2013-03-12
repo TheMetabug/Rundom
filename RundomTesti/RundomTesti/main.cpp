@@ -199,7 +199,7 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::GUILAYER2, objectLayerM );
 //StartMenu
 
-	Texture* texturemenu =new Texture("menu.png");
+	Texture* texturemenu =new Texture("Menu2.png");
 	menu = BackGround(texturemenu,vec2(0,0), 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(menu.background);
 	backgrounds.push_back(menu);
