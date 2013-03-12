@@ -26,5 +26,6 @@ public:
 	double hity;
 	void DangerHit();
 	void Death();
+	float boost;
 };
 

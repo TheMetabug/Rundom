@@ -210,12 +210,12 @@ bool init ( ESContext *esContext )
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
 
-	score = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat");
-	score->totalTimeText->setPosition(vec2(5,4));
+	score = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat", &health);
+	score->totalTimeText->setPosition(vec2(0,-4));
 	objectLayerM->addGameObject(score->totalTimeText);
 
-	fps = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat");
-	fps->fpsText->setPosition(vec2(-5,-4));
+	fps = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat", &health);
+	fps->fpsText->setPosition(vec2(9,5.4f));
 	objectLayerM->addGameObject(fps->fpsText);
 		
 	return true;
@@ -279,13 +279,10 @@ void update( ESContext* ctx, float deltaTime )
 					spark1.spark->setPosition((float)dangers[i].hitx,(float)dangers[i].hity);
 				}
 			}
-		// death by hippo
+			// death by hippo
 			if (player.hitx <= -7.0f)
 			{
-				health.Hit();
-				health.Hit();
-				health.Hit();
-				health.Hit();
+				health.hp = 0;
 				player.Death();				
 			}
 
@@ -326,6 +323,8 @@ void draw ( ESContext *esContext )
 	map->getCamera()->setScreenSize(esContext->width,esContext->height); 
 
 	score->render(0.0f,0.0f);
+
+	fps->render(0.0f, 0.0f);
 
 	// Render map and all of its layers containing GameObjects to screen.
 	map->render();

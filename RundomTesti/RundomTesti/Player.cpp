@@ -52,13 +52,21 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 	hitx = 0;
 	hity = 0;
 	die = 0;
-
+	boost = 0;
 
 }
 void Player::Update(float deltaTime)
 {
 	count++;
 	hyppyvoima -= 0.05f;
+	//player->animationFrameRate += boost;
+
+	boost += 0.02f;
+	if (boost >= 10)
+	{
+		std::cout << boost << std::endl;
+		boost = 10;
+	}
 
 	if (die == 0)
 	{
@@ -79,6 +87,7 @@ void Player::Update(float deltaTime)
 	{
 		player->setPosition(player->getPosition()+vec2(0.1f,0.0f));
 	}
+
 
 	//Jump with space
 	if(getKeyState(KeyCodes::KEY_SPACE) && kipuvoima == 0 && die == 0)

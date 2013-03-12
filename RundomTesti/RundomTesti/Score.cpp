@@ -1,6 +1,4 @@
 #include "Score.h"
-
-
 #include <sstream>
 template <class T>
 std::string to_string(T t)
@@ -10,21 +8,20 @@ std::string to_string(T t)
         return s.str();
 }
 
-
-// Kaytä namespacea yam2d, niin ei tarvitse aina
-// explisiittisesti määritellä yam2d:: aina jokaisen 
-// yam2d-tietotyypin alussa
 using namespace yam2d;
 
 Score::Score(
 	const char* fontTextureFileName, 
-	const char* fontDatFileName)
+	const char* fontDatFileName,
+	Health *health)
 {
 	// Create new sprite batch group. This must be deleted at deinit.
 	m_batch = new SpriteBatchGroup();
 
 	// Load font texture. Made with font creation tool like bitmap font builder.
 	m_fontTexture = new Texture(fontTextureFileName);
+
+	this->health = health;
 
 	// Create font clip areas (sprite sheet), from dat file and texture. Dat-file is made with bitmap font builder.
 	m_font = SpriteSheet::autoFindFontFromTexture(m_fontTexture,fontDatFileName);
@@ -55,24 +52,30 @@ void Score::update(float deltaTime)
 	
 
 	// Increase total time
-	m_totalTime += deltaTime;
+	if (health->hp != 0)
+	{
+		m_totalTime += deltaTime;
+	}
+
 	m_frameRateCounter += deltaTime;
 
-	if( m_frameRateCounter > 1.0f )
+	if( m_frameRateCounter > .2f )
 	{
 		m_fps = float(m_frameRateFrameCounter) / m_frameRateCounter;
 
-		m_fpsText->setText(	"FPS: "	+ to_string(m_fps) );
+		//std::cout << m_fps << std::endl;
+
+		m_fpsText->setText(	"FPS: "	+ to_string(floor(m_fps)) );
 		// Nollaa laskurit
 		m_frameRateCounter = 0.0f;
 		m_frameRateFrameCounter = 0;
 
 		// Nollaa sprite batchin laskurit
-		SpriteBatch:: resetStatsValues();
+		SpriteBatch::resetStatsValues();
 	}
 
 	// Set text.
-	m_totalTimeText->setText( "Score : " + to_string(floor(m_totalTime*100)) );
+	m_totalTimeText->setText( "Score : " + to_string(ceil(m_totalTime*100)) );
 
 	
 }

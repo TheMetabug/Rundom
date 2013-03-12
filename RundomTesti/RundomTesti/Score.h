@@ -6,6 +6,8 @@
 #include <Text.h>
 #include <Texture.h>
 #include <TextGameObject.h>
+#include <iostream>
+#include "Health.h"
 
 class Score
 {
@@ -13,13 +15,16 @@ public:
 
 	Score(
 		const char* fontTextureFileName, 
-		const char* fontDatFileName);
+		const char* fontDatFileName,
+		Health *health);
 	
 	~Score(void);
 
 	void update( float deltaTime);
 
 	void render(float posX, float posY);
+
+	Health* health;
 
 	// Text objects
 	yam2d::Ref<yam2d::Text> m_totalTimeText;

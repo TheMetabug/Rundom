@@ -20,6 +20,7 @@ public:
 	yam2d::Texture* texture;
 	double speed;
 	float yspawn;
+	float boost;
 
 	void Update(float deltaTime);
 };
