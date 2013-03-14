@@ -115,12 +115,12 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::BACKGROUND0, backgroundLayer );
 //TAIVAS1
 	Texture* texturebg1 =new Texture("sky.png");
-	background1 = BackGround(texturebg1,vec2(0,-3.5f), 0.5f, 1280.0f, 335.0f, -3.5f);
+	background1 = BackGround(texturebg1,vec2(0,-3.5f), 0.05f, 1280.0f, 335.0f, -3.5f);
 	backgroundLayer->addGameObject(background1.background);
 	backgrounds.push_back(background1);
 
 	Texture* texturebg2 =new Texture("sky.png");
-	background2 = BackGround(texturebg2,vec2(20,-3.5f), 0.5f, 1280.0f, 335.0f, -3.5f);
+	background2 = BackGround(texturebg2,vec2(20,-3.5f), 0.05f, 1280.0f, 335.0f, -3.5f);
 	backgroundLayer->addGameObject(background2.background);
 	backgrounds.push_back(background2);
 
@@ -136,12 +136,12 @@ bool init ( ESContext *esContext )
 
 //JUNGLEBG1
 	Texture* texturebg3 =new Texture("jungle.png");
-	backjungle1 = BackGround(texturebg3,vec2(0,1), 1.5f, 1280.0f, 436.0f, 1);
+	backjungle1 = BackGround(texturebg3,vec2(0,1), 0.5f, 1280.0f, 436.0f, 1);
 	objectLayer0->addGameObject(backjungle1.background);
 	backgrounds.push_back(backjungle1);
 
 	Texture* texturebg4 =new Texture("jungle.png");
-	backjungle2 = BackGround(texturebg4,vec2(20,1), 1.5f, 1280.0f, 436.0f, 1);
+	backjungle2 = BackGround(texturebg4,vec2(20,1), 0.5f, 1280.0f, 436.0f, 1);
 	objectLayer0->addGameObject(backjungle2.background);
 	backgrounds.push_back(backjungle2);
 
@@ -171,12 +171,12 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::MAPLAYER2, objectLayer2);
 
 	Texture* texturebg5 =new Texture("ground.png");
-	stepground1 = BackGround(texturebg5,vec2(0,4.5f), 3.5f, 1280.0f, 170.0f, 4.5f);
+	stepground1 = BackGround(texturebg5,vec2(0,4.5f), 2.5f, 1280.0f, 170.0f, 4.5f);
 	objectLayer2->addGameObject(stepground1.background);
 	backgrounds.push_back(stepground1);
 
 	Texture* texturebg6 =new Texture("ground.png");
-	stepground2 = BackGround(texturebg6,vec2(20,4.5f), 3.5f, 1280.0f, 170.0f, 4.5f);
+	stepground2 = BackGround(texturebg6,vec2(20,4.5f), 2.5f, 1280.0f, 170.0f, 4.5f);
 	objectLayer2->addGameObject(stepground2.background);
 	backgrounds.push_back(stepground2);
 

@@ -29,7 +29,7 @@ BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _
 
 void BackGround::Update(float deltaTime)
 {
-	boost += 0.02f;
+	boost += 0.01f;
 	if (boost >= 10)
 	{
 		std::cout << boost << std::endl;

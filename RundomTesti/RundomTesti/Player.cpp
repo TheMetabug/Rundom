@@ -25,7 +25,7 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 		this->health = health;
 
 	int numClipsPerAnimation = 8;
-
+	boost = 0;
 	float animationFrameRate = 20.0f;
 	for( int i=0; i<4; ++i )
 	{
@@ -52,7 +52,7 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 	hitx = 0;
 	hity = 0;
 	die = 0;
-	boost = 0;
+
 
 }
 void Player::Update(float deltaTime)
@@ -67,6 +67,7 @@ void Player::Update(float deltaTime)
 		std::cout << boost << std::endl;
 		boost = 10;
 	}
+	//player->getActiveAnimation();
 
 	if (die == 0)
 	{
