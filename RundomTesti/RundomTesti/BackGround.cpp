@@ -11,7 +11,7 @@ BackGround::~BackGround()
 }
 
 
-BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _speed,
+BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _speed, double _speedmax,
 						int _width, int _height, float _yspawn)
 {
 	/*background1 =  new SpriteGameObject::SpriteGameObject(_texture, 1281.0f, 335.0f);
@@ -22,6 +22,7 @@ BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _
 	background->setName("skybg1");
 	background->setPosition(_position);
 	speed = _speed;
+	speedmax = _speedmax;
 	yspawn = _yspawn;
 	boost = 0;
 	_texture->setTransparentColor(0xff,0x00,0xff);
@@ -30,10 +31,11 @@ BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _
 void BackGround::Update(float deltaTime)
 {
 	boost += 0.01f;
-	if (boost >= 10)
+	std::cout << "  " << boost << std::endl; 
+	if (boost >= speedmax)
 	{
 		std::cout << boost << std::endl;
-		boost = 10;
+		boost = speedmax;
 	}
 	background->setPosition(background->getPosition()-vec2((speed + boost)*deltaTime,0.0f));
 	if (background->getPosition().x <= -20)
@@ -41,5 +43,10 @@ void BackGround::Update(float deltaTime)
 		background->setPosition(vec2(background->getPosition().x + 40,yspawn));
 	}
 
+}
+
+void BackGround::Slow()
+{
+	boost = boost/2;
 }
 

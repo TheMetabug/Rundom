@@ -104,6 +104,15 @@ bool init ( ESContext *esContext )
 {
 	srand(time(NULL));
 
+	double speedsky =  1.0f;
+	double speedskymax = 3.0f;
+
+	double speedforest = 1.5f;
+	double speedforestmax = 5.0f;
+
+	double speedground = 4.0f;
+	double speedgroundmax = 10.0f;
+
 	// Level tile size
 	vec2 tileSize(64,64);
 
@@ -115,12 +124,14 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::BACKGROUND0, backgroundLayer );
 //TAIVAS1
 	Texture* texturebg1 =new Texture("sky.png");
-	background1 = BackGround(texturebg1,vec2(0,-3.5f), 0.05f, 1280.0f, 335.0f, -3.5f);
+	background1 = BackGround(texturebg1,vec2(0,-3.5f), speedsky, speedskymax,
+			1280.0f, 335.0f, -3.5f);
 	backgroundLayer->addGameObject(background1.background);
 	backgrounds.push_back(background1);
 
 	Texture* texturebg2 =new Texture("sky.png");
-	background2 = BackGround(texturebg2,vec2(20,-3.5f), 0.05f, 1280.0f, 335.0f, -3.5f);
+	background2 = BackGround(texturebg2,vec2(20,-3.5f), speedsky, speedskymax,
+			1280.0f, 335.0f, -3.5f);
 	backgroundLayer->addGameObject(background2.background);
 	backgrounds.push_back(background2);
 
@@ -136,12 +147,14 @@ bool init ( ESContext *esContext )
 
 //JUNGLEBG1
 	Texture* texturebg3 =new Texture("jungle.png");
-	backjungle1 = BackGround(texturebg3,vec2(0,1), 0.5f, 1280.0f, 436.0f, 1);
+	backjungle1 = BackGround(texturebg3,vec2(0,1), speedforest, speedforestmax,
+			1280.0f, 436.0f, 1);
 	objectLayer0->addGameObject(backjungle1.background);
 	backgrounds.push_back(backjungle1);
 
 	Texture* texturebg4 =new Texture("jungle.png");
-	backjungle2 = BackGround(texturebg4,vec2(20,1), 0.5f, 1280.0f, 436.0f, 1);
+	backjungle2 = BackGround(texturebg4,vec2(20,1), speedforest, speedforestmax,
+			1280.0f, 436.0f, 1);
 	objectLayer0->addGameObject(backjungle2.background);
 	backgrounds.push_back(backjungle2);
 
@@ -170,13 +183,15 @@ bool init ( ESContext *esContext )
 //				__LAYER2__
 	map->addLayer(Map::MAPLAYER2, objectLayer2);
 
-	Texture* texturebg5 =new Texture("ground.png");
-	stepground1 = BackGround(texturebg5,vec2(0,4.5f), 2.5f, 1280.0f, 170.0f, 4.5f);
+	Texture* texturebg5 =new Texture("groundoma.png");
+	stepground1 = BackGround(texturebg5,vec2(0,4.3f), speedground, speedgroundmax,
+			1280.0f, 170.0f, 4.3f);
 	objectLayer2->addGameObject(stepground1.background);
 	backgrounds.push_back(stepground1);
 
-	Texture* texturebg6 =new Texture("ground.png");
-	stepground2 = BackGround(texturebg6,vec2(20,4.5f), 2.5f, 1280.0f, 170.0f, 4.5f);
+	Texture* texturebg6 =new Texture("groundoma.png");
+	stepground2 = BackGround(texturebg6,vec2(20,4.3f), speedground, speedgroundmax,
+			1280.0f, 170.0f, 4.3f);
 	objectLayer2->addGameObject(stepground2.background);
 	backgrounds.push_back(stepground2);
 
@@ -200,13 +215,13 @@ bool init ( ESContext *esContext )
 //StartMenu
 
 	Texture* texturemenu =new Texture("Menu2.png");
-	menu = BackGround(texturemenu,vec2(0,0), 0, 1280.0f, 720.0f, 0);
+	menu = BackGround(texturemenu,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(menu.background);
 	backgrounds.push_back(menu);
 //DeathMenu
 
 	Texture* texturedead =new Texture("death.png");
-	dead = BackGround(texturedead,vec2(0,0), 0, 1280.0f, 720.0f, 0);
+	dead = BackGround(texturedead,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
 
@@ -260,7 +275,7 @@ void update( ESContext* ctx, float deltaTime )
 			// Update map. this will update all GameObjects inside a map layers.
 			map->update(deltaTime);
 
-			//	Collision between player and danger
+
 			for (int i = 0; i < backgrounds.size(); i++)
 			{
 				backgrounds[i].Update(deltaTime);
@@ -269,14 +284,23 @@ void update( ESContext* ctx, float deltaTime )
 			for (int i = 0; i < dangers.size(); i++)
 			{
 				dangers[i].Update(deltaTime);
+				//	Collision between player and danger
 				if (player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
 					&& player.hity > dangers[i].hity - 0.5f 
 					&& player.hity -1.3f < dangers[i].hity + 0.5f /*danger.hit player.hity == danger.hity*/)
 				{
 					dangers[i].Respawn();
 					player.DangerHit();
+				// spark effect
 					spark1.Hit();
 					spark1.spark->setPosition((float)dangers[i].hitx,(float)dangers[i].hity);
+				// slow effect
+					backgrounds[0].Slow();
+					backgrounds[1].Slow();
+					backgrounds[2].Slow();
+					backgrounds[3].Slow();
+					backgrounds[4].Slow();
+					backgrounds[5].Slow();
 				}
 			}
 			// death by hippo
