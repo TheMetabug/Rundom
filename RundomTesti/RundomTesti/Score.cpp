@@ -37,6 +37,8 @@ Score::Score(
 	m_totalTime = 0.0f;
 	m_frameCount = 0;
 
+	highscore = 0.0f;
+
 	m_fps = 0.0f;
 	m_frameRateCounter = 0.0f;
 	m_frameRateFrameCounter = 0;
@@ -74,8 +76,10 @@ void Score::update(float deltaTime)
 		SpriteBatch::resetStatsValues();
 	}
 
+	highscore = ceil(m_totalTime*100);
+
 	// Set text.
-	m_totalTimeText->setText( "Score : " + to_string(ceil(m_totalTime*100)) );
+	m_totalTimeText->setText( "Score : " + to_string(highscore) );
 
 	
 }

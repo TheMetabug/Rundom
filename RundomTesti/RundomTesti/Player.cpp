@@ -131,13 +131,6 @@ void Player::Update(float deltaTime)
 
 		}
 
-
-
-	/*if (die == 1)
-	{
-	kipuvoima -= 0.025f;
-	}*/
-
 	hitx = player->getPosition().x;
 	//std::cout << hitx << std::endl;
 	hity = player->getPosition().y;

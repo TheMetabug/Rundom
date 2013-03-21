@@ -5,6 +5,7 @@
 #include <Camera.h>
 #include <Input.h>
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <vector>
 #include "Player.h"
@@ -16,10 +17,12 @@
 #include "Score.h"
 
 using namespace yam2d;
+//using namespace std;
+
 
 namespace
 {
-	Map* map = 0;
+	
 	float count = 0;
 	int gameState = 0;
 }
@@ -44,7 +47,7 @@ BackGround menu;
 BackGround dead;
 Score* score;
 Score* fps;
-
+Map* map = 0;
 
 SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, float sizeX, float sizeY, bool isWhiteTransparentColor = false)
 {
@@ -99,9 +102,15 @@ SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, floa
 	return gameObject;
 }
 
+//int* parseHighscoreFile
+
 //			Initialize the game
 bool init ( ESContext *esContext )
 {
+
+//
+
+//
 	srand(time(NULL));
 
 	double speedsky =  1.0f;
@@ -220,7 +229,7 @@ bool init ( ESContext *esContext )
 	backgrounds.push_back(menu);
 //DeathMenu
 
-	Texture* texturedead =new Texture("death.png");
+	Texture* texturedead =new Texture("death2.png");
 	dead = BackGround(texturedead,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
@@ -319,6 +328,12 @@ void update( ESContext* ctx, float deltaTime )
 				health.newGame();
 				gameState = 3;
 				dead.background->setPosition(0,0);
+
+			std::ofstream myfile;
+			myfile.open ("highscore.txt", std::ios::app);
+			myfile << score->highscore <<"\n";
+			myfile.close();
+
 			}
 
 		}

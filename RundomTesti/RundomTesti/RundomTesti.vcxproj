@@ -87,6 +87,7 @@
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Save.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Spark.cpp" />
   </ItemGroup>
@@ -101,6 +102,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Save.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Spark.h" />
   </ItemGroup>

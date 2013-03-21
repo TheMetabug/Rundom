@@ -26,6 +26,8 @@ public:
 
 	Health* health;
 
+	double highscore;
+
 	// Text objects
 	yam2d::Ref<yam2d::Text> m_totalTimeText;
 	yam2d::Ref<yam2d::Text> m_fpsText;
