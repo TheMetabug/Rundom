@@ -18,6 +18,10 @@ public:
 	Danger();
 	~Danger();
 
+	void Update(float deltaTime);
+	void Respawn();
+	void Jump();
+
 	yam2d::AnimatedSpriteGameObject* danger;
 	yam2d::vec2 position;
 	yam2d::Texture* texture;
@@ -29,8 +33,5 @@ public:
 	float frameRate;
 	double hitx;
 	double hity;
-	
-	void Update(float deltaTime);
-	void Respawn();
-	void Jump();
+
 };

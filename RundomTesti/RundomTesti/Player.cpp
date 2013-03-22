@@ -142,7 +142,7 @@ void Player::Update(float deltaTime)
 	if (player->getPosition().y >= 40.5f)
 		{
 			player->setRotation(0);
-			player->setPosition(vec2(0,-4.5f));
+			//player->setPosition(vec2(0,-4.5f));
 			die = 0;
 			health->hp = 4;
 		}

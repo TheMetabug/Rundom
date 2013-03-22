@@ -8,6 +8,7 @@
 #include <fstream>
 #include <time.h>
 #include <vector>
+#include <sstream>
 #include "Player.h"
 #include "Enemy.h"
 #include "BackGround.h"
@@ -15,6 +16,14 @@
 #include "Spark.h"
 #include "Health.h"
 #include "Score.h"
+#include <algorithm>
+template <class T>
+std::string to_string(T t)
+{
+        std::stringstream s;
+        s << t;
+        return s.str();
+}
 
 using namespace yam2d;
 //using namespace std;
@@ -46,7 +55,6 @@ BackGround stepground2;
 BackGround menu;
 BackGround dead;
 Score* score;
-Score* fps;
 Map* map = 0;
 
 SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, float sizeX, float sizeY, bool isWhiteTransparentColor = false)
@@ -102,15 +110,52 @@ SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, floa
 	return gameObject;
 }
 
-//int* parseHighscoreFile
+// Reads the highscore file and returns an vector of the scores
+std::vector<int> parseHighscoreFile(std::string& fileName)
+{
+	std::vector<int> highscores;
+
+	std::ifstream highscoreFile(fileName);
+	if(highscoreFile.is_open())
+	{
+		while(highscoreFile.good())
+		{
+			std::string line;
+			int score;
+			std::getline(highscoreFile, line);
+			
+			score = atoi(line.c_str());
+			if(score != 0)
+				highscores.push_back(score);
+		}
+	}
+
+	highscoreFile.close();
+	//std::sort(highscores.begin(), highscores.end());
+	return highscores;
+}
+
+void writeHighScores(std::string& fileName, int x)
+{
+	auto scores = parseHighscoreFile(fileName);
+	std::ofstream output(fileName, std::ios::trunc);
+
+	scores.push_back(x);
+	std::sort(scores.begin(), scores.end());
+	std::reverse(scores.begin(), scores.end());
+	scores.resize(5);
+
+	for(size_t i = 0; i < scores.size(); i++)
+	{
+		if(scores[i] > 0)
+			output << scores[i] << std::endl;
+	}
+	output.close();
+}
 
 //			Initialize the game
 bool init ( ESContext *esContext )
 {
-
-//
-
-//
 	srand(time(NULL));
 
 	double speedsky =  1.0f;
@@ -222,25 +267,29 @@ bool init ( ESContext *esContext )
 //				_MENULAYER_
 	map->addLayer(Map::GUILAYER2, objectLayerM );
 //StartMenu
-
 	Texture* texturemenu =new Texture("Menu2.png");
 	menu = BackGround(texturemenu,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(menu.background);
 	backgrounds.push_back(menu);
 //DeathMenu
-
 	Texture* texturedead =new Texture("death2.png");
 	dead = BackGround(texturedead,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
 
+//Text objects
 	score = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat", &health);
 	score->totalTimeText->setPosition(vec2(0,-4));
 	objectLayerM->addGameObject(score->totalTimeText);
 
-	fps = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat", &health);
-	fps->fpsText->setPosition(vec2(9,5.4f));
-	objectLayerM->addGameObject(fps->fpsText);
+	score->fpsText->setPosition(vec2(9,5.4f));
+	objectLayerM->addGameObject(score->fpsText);
+
+	for (int i = 0; i < 5; i++)
+	{
+		score->scoreTextObjects[i]->setPosition(vec2(7,-4 + i*0.5f));
+		objectLayerM->addGameObject(score->scoreTextObjects[i]);
+	}
 		
 	return true;
 }
@@ -279,7 +328,13 @@ void update( ESContext* ctx, float deltaTime )
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
 			score->update(deltaTime);
-			fps->update(deltaTime);
+			
+			for (int i = 0; i < 5; i++)
+			{
+				score->scoreTextObjects[i]->setPosition(vec2(-15,0));
+			}
+			
+			//fps->update(deltaTime);
 			
 			// Update map. this will update all GameObjects inside a map layers.
 			map->update(deltaTime);
@@ -304,12 +359,10 @@ void update( ESContext* ctx, float deltaTime )
 					spark1.Hit();
 					spark1.spark->setPosition((float)dangers[i].hitx,(float)dangers[i].hity);
 				// slow effect
-					backgrounds[0].Slow();
-					backgrounds[1].Slow();
-					backgrounds[2].Slow();
-					backgrounds[3].Slow();
-					backgrounds[4].Slow();
-					backgrounds[5].Slow();
+					for (int i = 0; i < 6; i++)
+					{
+						backgrounds[i].Slow();
+					}
 				}
 			}
 			// death by hippo
@@ -327,19 +380,25 @@ void update( ESContext* ctx, float deltaTime )
 				player.die = 0;
 				health.newGame();
 				gameState = 3;
-				dead.background->setPosition(0,0);
-
-			std::ofstream myfile;
-			myfile.open ("highscore.txt", std::ios::app);
-			myfile << score->highscore <<"\n";
-			myfile.close();
-
+				dead.background->setPosition(0,2);
+				
+				std::string filename = "highscore.txt";
+				writeHighScores(filename, score->highscore);
 			}
 
 		}
 
 	if (gameState == 3)
 	{
+		std::string filename = "highscore.txt";
+		auto scores = parseHighscoreFile(filename);
+
+		for (int i = 0; i < 5; i++)
+		{
+			score->scoreTextObjects[i]->getText()->setText(to_string(scores[i]));
+			score->scoreTextObjects[i]->setPosition(vec2(7,-4.5f + i*0.5f));
+		}
+
 		if(getKeyState(KeyCodes::KEY_R))
 		{
 			gameState = 1;
@@ -363,7 +422,7 @@ void draw ( ESContext *esContext )
 
 	score->render(0.0f,0.0f);
 
-	fps->render(0.0f, 0.0f);
+	//fps->render(0.0f, 0.0f);
 
 	// Render map and all of its layers containing GameObjects to screen.
 	map->render();

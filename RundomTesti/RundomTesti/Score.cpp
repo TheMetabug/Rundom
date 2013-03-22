@@ -30,8 +30,20 @@ Score::Score(
 	m_totalTimeText		= new Text(m_font);
 	m_fpsText			= new Text(m_font);
 
+	for (int i = 0; i < 5; i++)
+	{
+		scoreTexts.push_back(new Text(m_font));
+	}
+
 	totalTimeText		= new TextGameObject(0,m_totalTimeText);
 	fpsText				= new TextGameObject(0,m_fpsText);
+
+	for (int i = 0; i < 5; i++)
+	{
+		scoreTextObjects.push_back(new TextGameObject(0,scoreTexts[i]));
+	}
+
+
 
 	// Set total time to 0
 	m_totalTime = 0.0f;

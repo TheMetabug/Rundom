@@ -7,6 +7,7 @@
 #include <Texture.h>
 #include <TextGameObject.h>
 #include <iostream>
+#include <vector>
 #include "Health.h"
 
 class Score
@@ -28,12 +29,26 @@ public:
 
 	double highscore;
 
+	std::vector <yam2d::Ref<yam2d::Text>> scoreTexts;
+	std::vector <yam2d::Ref<yam2d::TextGameObject>> scoreTextObjects;
+
 	// Text objects
 	yam2d::Ref<yam2d::Text> m_totalTimeText;
 	yam2d::Ref<yam2d::Text> m_fpsText;
+	yam2d::Ref<yam2d::Text> m_scoreText1;
+	yam2d::Ref<yam2d::Text> m_scoreText2;
+	yam2d::Ref<yam2d::Text> m_scoreText3;
+	yam2d::Ref<yam2d::Text> m_scoreText4;
+	yam2d::Ref<yam2d::Text> m_scoreText5;
 
 	yam2d::Ref<yam2d::TextGameObject> totalTimeText;
 	yam2d::Ref<yam2d::TextGameObject> fpsText;
+	yam2d::Ref<yam2d::TextGameObject> scoreText1;
+	yam2d::Ref<yam2d::TextGameObject> scoreText2;
+	yam2d::Ref<yam2d::TextGameObject> scoreText3;
+	yam2d::Ref<yam2d::TextGameObject> scoreText4;
+	yam2d::Ref<yam2d::TextGameObject> scoreText5;
+
 
 	// Create new sprite batch group. This must be deleted at deinit.
 	yam2d::Ref<yam2d::SpriteBatchGroup>	m_batch;

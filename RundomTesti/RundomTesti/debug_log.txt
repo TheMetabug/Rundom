@@ -1,2 +1,2 @@
-Error: [yam2d::`anonymous-namespace'::RefCounter::~RefCounter] 18 Memory leaks detected!
+Error: [yam2d::`anonymous-namespace'::RefCounter::~RefCounter] 24 Memory leaks detected!
 
