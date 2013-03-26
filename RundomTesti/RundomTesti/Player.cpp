@@ -5,6 +5,8 @@ using namespace yam2d;
 float count = 0.0f;
 float hyppyvoima = 0;
 float kipuvoima = 0;
+bool isHeJumping = false;
+bool isHeDead = false;
 
 Player::Player()
 {
@@ -71,6 +73,9 @@ void Player::Update(float deltaTime)
 
 	if (die == 0)
 	{
+		isHeJumping = false;
+		isHeDead = false;
+
 		if (player->getPosition().y >= 2.5f)
 		{
 			hyppyvoima = 0;
@@ -96,6 +101,7 @@ void Player::Update(float deltaTime)
 		if (player->getPosition().y >= 2.5f)
 		{
 			hyppyvoima = 0.6f;
+			isHeJumping = true;
 		}
 	}
 	
@@ -150,10 +156,9 @@ void Player::Update(float deltaTime)
 	//player dies
 	if (health->hp == 0)
 	{
+		isHeDead = true;
 		die = 1;
 	}
-
-
 }
 
 void Player::DangerHit()
@@ -166,4 +171,5 @@ void Player::DangerHit()
 void Player::Death()
 {
 		die = 1;
+		isHeDead = true;
 }

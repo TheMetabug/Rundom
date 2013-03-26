@@ -8,6 +8,7 @@
 #include <TextGameObject.h>
 #include <iostream>
 #include <vector>
+#include <string>
 #include "Health.h"
 
 class Score
@@ -29,6 +30,9 @@ public:
 
 	double highscore;
 
+	std::string letters;
+	int lindex;
+
 	std::vector <yam2d::Ref<yam2d::Text>> scoreTexts;
 	std::vector <yam2d::Ref<yam2d::TextGameObject>> scoreTextObjects;
 
@@ -40,6 +44,11 @@ public:
 	yam2d::Ref<yam2d::Text> m_scoreText3;
 	yam2d::Ref<yam2d::Text> m_scoreText4;
 	yam2d::Ref<yam2d::Text> m_scoreText5;
+	yam2d::Ref<yam2d::Text> m_nameText1;
+	yam2d::Ref<yam2d::Text> m_nameText2;
+	yam2d::Ref<yam2d::Text> m_nameText3;
+
+
 
 	yam2d::Ref<yam2d::TextGameObject> totalTimeText;
 	yam2d::Ref<yam2d::TextGameObject> fpsText;
@@ -48,6 +57,9 @@ public:
 	yam2d::Ref<yam2d::TextGameObject> scoreText3;
 	yam2d::Ref<yam2d::TextGameObject> scoreText4;
 	yam2d::Ref<yam2d::TextGameObject> scoreText5;
+	yam2d::Ref<yam2d::TextGameObject> nameText1;
+	yam2d::Ref<yam2d::TextGameObject> nameText2;
+	yam2d::Ref<yam2d::TextGameObject> nameText3;
 
 
 	// Create new sprite batch group. This must be deleted at deinit.
@@ -58,10 +70,6 @@ public:
 
 	// Font is series of clipping regions (SpriteSheet), which specifies font and character set.
 	yam2d::SpriteSheet* m_font;
-
-
-
-
 
 	// Tähän lasketaan kokonaisaikaa
 	float m_totalTime; // Kokonaisaika

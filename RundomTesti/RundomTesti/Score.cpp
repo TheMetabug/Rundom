@@ -15,6 +15,11 @@ Score::Score(
 	const char* fontDatFileName,
 	Health *health)
 {
+	//Lets make a string
+	
+	letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	lindex = 0;
+
 	// Create new sprite batch group. This must be deleted at deinit.
 	m_batch = new SpriteBatchGroup();
 
@@ -29,6 +34,9 @@ Score::Score(
 	// Create new texts using font
 	m_totalTimeText		= new Text(m_font);
 	m_fpsText			= new Text(m_font);
+	m_nameText1			= new Text(m_font);
+	m_nameText2			= new Text(m_font);
+	m_nameText3			= new Text(m_font);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -37,14 +45,16 @@ Score::Score(
 
 	totalTimeText		= new TextGameObject(0,m_totalTimeText);
 	fpsText				= new TextGameObject(0,m_fpsText);
+	nameText1			= new TextGameObject(0,m_nameText1);
+	nameText2			= new TextGameObject(0,m_nameText2);
+	nameText3			= new TextGameObject(0,m_nameText3);
 
 	for (int i = 0; i < 5; i++)
 	{
 		scoreTextObjects.push_back(new TextGameObject(0,scoreTexts[i]));
 	}
 
-
-
+	
 	// Set total time to 0
 	m_totalTime = 0.0f;
 	m_frameCount = 0;
@@ -64,7 +74,6 @@ Score::~Score(void)
 void Score::update(float deltaTime)
 {
 	
-
 	// Increase total time
 	if (health->hp != 0)
 	{
@@ -92,6 +101,8 @@ void Score::update(float deltaTime)
 
 	// Set text.
 	m_totalTimeText->setText( "Score : " + to_string(highscore) );
+
+	m_nameText1->setText( to_string(letters[lindex]));
 
 	
 }

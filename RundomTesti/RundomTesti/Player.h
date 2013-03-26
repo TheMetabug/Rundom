@@ -20,6 +20,8 @@ public:
 	
 	Health* health;
 
+	bool isHeJumping;
+	bool isHeDead;
 	int die;
 	void Update(float deltaTime);
 	double hitx;

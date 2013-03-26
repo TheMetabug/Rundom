@@ -9,6 +9,7 @@
 #include <time.h>
 #include <vector>
 #include <sstream>
+#include <irrKlang.h>
 #include "Player.h"
 #include "Enemy.h"
 #include "BackGround.h"
@@ -26,14 +27,17 @@ std::string to_string(T t)
 }
 
 using namespace yam2d;
+using namespace irrklang;
 //using namespace std;
 
 
 namespace
 {
-	
+	ISoundEngine* engine = createIrrKlangDevice();
 	float count = 0;
 	int gameState = 0;
+	bool isButtonPressed = false;
+	bool isPlayerScreamed = false;
 }
 
 std::vector <Danger> dangers;
@@ -54,6 +58,7 @@ BackGround stepground1;
 BackGround stepground2;
 BackGround menu;
 BackGround dead;
+BackGround insertText;
 Score* score;
 Map* map = 0;
 
@@ -155,7 +160,9 @@ void writeHighScores(std::string& fileName, int x)
 
 //			Initialize the game
 bool init ( ESContext *esContext )
-{
+{	
+	engine->play2D("music.mp3", true);
+
 	srand(time(NULL));
 
 	double speedsky =  1.0f;
@@ -166,6 +173,8 @@ bool init ( ESContext *esContext )
 
 	double speedground = 4.0f;
 	double speedgroundmax = 10.0f;
+
+
 
 	// Level tile size
 	vec2 tileSize(64,64);
@@ -195,6 +204,7 @@ bool init ( ESContext *esContext )
 	Layer* objectLayer2 = new Layer(map, "Objects", 1.0f, true, false);
 	Layer* objectLayerG = new Layer(map, "Objects", 1.0f, true, false);
 	Layer* objectLayerM = new Layer(map, "Objects", 1.0f, true, false);
+	Layer* objectLayerU = new Layer(map, "Objects", 1.0f, true, false);
 	
 //				__LAYER0__
 	map->addLayer(Map::MAPLAYER0, objectLayer0 );
@@ -276,14 +286,24 @@ bool init ( ESContext *esContext )
 	dead = BackGround(texturedead,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(dead.background);
 	backgrounds.push_back(dead);
+	map->addLayer(Map::GUILAYER3, objectLayerU);
+	//InsertText
+	Texture* textureInsert =new Texture("insertname.png");
+	insertText = BackGround(textureInsert,vec2(0,0), 0, 0, 125.0f, 41.0f, 0);
+	objectLayerM->addGameObject(insertText.background);
+	backgrounds.push_back(insertText);
+
 
 //Text objects
 	score = new Score("Fixedsys_24_Bold.png", "Fixedsys_24_Bold.dat", &health);
 	score->totalTimeText->setPosition(vec2(0,-4));
-	objectLayerM->addGameObject(score->totalTimeText);
+	objectLayerU->addGameObject(score->totalTimeText);
 
 	score->fpsText->setPosition(vec2(9,5.4f));
-	objectLayerM->addGameObject(score->fpsText);
+	objectLayerU->addGameObject(score->fpsText);
+
+	score->nameText1->setPosition(vec2(9,5.4f));
+	objectLayerU->addGameObject(score->nameText1);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -297,6 +317,7 @@ bool init ( ESContext *esContext )
 //						Deinitialize the game
 void deinit ( ESContext *esContext )
 {
+	engine->drop(); // delete engine
 	delete map;
 }
 
@@ -308,18 +329,70 @@ void update( ESContext* ctx, float deltaTime )
 		exit(0);
 	}
 
-	if (gameState == 0)
-		{
+	if(player.isHeJumping == true)
+	{
+		engine->play2D("jump.wav", false);
+	}
+
+	//if(player.isHeDead == true)
+	//{
+	//	engine->play2D("death.wav", false);
+	//}
+
+	switch(gameState)
+	{
+	case 0:
 			menu.background->setPosition(0,0);
+			score->nameText1->setPosition(3,0);
+			insertText.background->setPosition(400,400);
 			dead.background->setPosition(400,400);
 			if(getKeyState(KeyCodes::KEY_RETURN))
 			{
-			gameState = 1;
+			gameState = 2;
 			}
-		}
+		break;
+	case 1:
+			insertText.background->setPosition(0,0);
+			score->m_nameText1->setText( to_string(score->letters[score->lindex]));
+			if(isButtonPressed == false)
+			{
 
-	if(gameState == 1)
-		{
+				if(getKeyState(KeyCodes::KEY_DOWN))
+				{
+					score->lindex++;
+					isButtonPressed = true;
+					if (score->lindex > 25)
+					{
+						score->lindex = 25;
+					}
+				}
+
+				if(getKeyState(KeyCodes::KEY_UP))
+				{
+					score->lindex--;
+					isButtonPressed = true;
+					if (score->lindex < 0)
+					{
+						score->lindex = 0;
+					}
+				}
+				
+			}
+			else
+				if(!getKeyState(KeyCodes::KEY_DOWN) && !getKeyState(KeyCodes::KEY_UP))
+				{
+					isButtonPressed = false;
+				}
+
+				
+				std::cout << score->lindex << std::endl;
+
+
+			// arrowkeys
+				//lindex ++ --
+				// object -> letters[lindex]
+		break;
+	case 2:
 			menu.background->setPosition(400,400);
 			dead.background->setPosition(400,400);
 			count++;
@@ -328,7 +401,17 @@ void update( ESContext* ctx, float deltaTime )
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
 			score->update(deltaTime);
+			score->nameText1->setPosition(400,400);
 			
+			if(player.isHeDead == true)
+					{
+						if(isPlayerScreamed == false)
+						{
+							isPlayerScreamed = true;
+							engine->play2D("death.wav", false);
+						}
+					}
+
 			for (int i = 0; i < 5; i++)
 			{
 				score->scoreTextObjects[i]->setPosition(vec2(-15,0));
@@ -347,14 +430,20 @@ void update( ESContext* ctx, float deltaTime )
 
 			for (int i = 0; i < dangers.size(); i++)
 			{
+
 				dangers[i].Update(deltaTime);
 				//	Collision between player and danger
 				if (player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
 					&& player.hity > dangers[i].hity - 0.5f 
 					&& player.hity -1.3f < dangers[i].hity + 0.5f /*danger.hit player.hity == danger.hity*/)
 				{
+					if(player.isHeDead == false)
+					{
+						engine->play2D("ouch.wav", false);
+					}
 					dangers[i].Respawn();
 					player.DangerHit();
+					
 				// spark effect
 					spark1.Hit();
 					spark1.spark->setPosition((float)dangers[i].hitx,(float)dangers[i].hity);
@@ -369,7 +458,16 @@ void update( ESContext* ctx, float deltaTime )
 			if (player.hitx <= -7.0f)
 			{
 				health.hp = 0;
-				player.Death();				
+				player.Death();
+				if(player.isHeDead == true)
+				{
+					if(isPlayerScreamed == false)
+					{
+					isPlayerScreamed = true;
+					engine->play2D("death.wav", false);
+					
+					}
+				}
 			}
 
 			if (player.hity >= 40.0f)
@@ -378,6 +476,7 @@ void update( ESContext* ctx, float deltaTime )
 				dangers[1].Respawn();
 				dangers[2].Respawn();
 				player.die = 0;
+				engine->play2D("deathscreen.wav", false);
 				health.newGame();
 				gameState = 3;
 				dead.background->setPosition(0,2);
@@ -385,11 +484,8 @@ void update( ESContext* ctx, float deltaTime )
 				std::string filename = "highscore.txt";
 				writeHighScores(filename, score->highscore);
 			}
-
-		}
-
-	if (gameState == 3)
-	{
+		break;
+	case 3:
 		std::string filename = "highscore.txt";
 		auto scores = parseHighscoreFile(filename);
 
@@ -401,13 +497,15 @@ void update( ESContext* ctx, float deltaTime )
 
 		if(getKeyState(KeyCodes::KEY_R))
 		{
-			gameState = 1;
+			gameState = 2;
 			player.player->setPosition(-1,2.5);
 			score->m_totalTime = 0;
+			isPlayerScreamed = false;
 		}
+		break;
 	}
+}
 
-	}
 	
 
 //			Draw game
