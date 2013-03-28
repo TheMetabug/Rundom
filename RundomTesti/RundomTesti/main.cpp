@@ -230,8 +230,8 @@ bool init ( ESContext *esContext )
 	objectLayer1->addGameObject(danger.danger);
 	dangers.push_back(danger);
 
-	Texture* texturebgDD =new Texture("danger.png");
-	danger2 = Danger(texturebgDD,vec2(16,3.2f), 3.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f, 1, 20.0f);
+	Texture* texturebgDD =new Texture("lisko.png");
+	danger2 = Danger(texturebgDD,vec2(16,3.2f), 3.5f, 0, 75.0f, 50.0f, 13.0f, 3.2f, 4, 10.0f);
 	objectLayer1->addGameObject(danger2.danger);
 	dangers.push_back(danger2);
 
