@@ -101,9 +101,6 @@ void Score::update(float deltaTime)
 
 	// Set text.
 	m_totalTimeText->setText( "Score : " + to_string(highscore) );
-
-	m_nameText1->setText( to_string(letters[lindex]));
-
 	
 }
 

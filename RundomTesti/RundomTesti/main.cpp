@@ -4,6 +4,7 @@
 #include <Layer.h>
 #include <Camera.h>
 #include <Input.h>
+#include <sqlite3.h>
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -31,13 +32,23 @@ using namespace irrklang;
 //using namespace std;
 
 
+
+
 namespace
 {
 	ISoundEngine* engine = createIrrKlangDevice();
 	float count = 0;
 	int gameState = 0;
+	int letterState = 0;
 	bool isButtonPressed = false;
 	bool isPlayerScreamed = false;
+	bool isScoresRead = false;
+	int dindex = 0;
+	sqlite3 *db;
+	int rc;
+
+	std::string scoreList;
+	
 }
 
 std::vector <Danger> dangers;
@@ -61,6 +72,17 @@ BackGround dead;
 BackGround insertText;
 Score* score;
 Map* map = 0;
+
+static int callback(void *NotUsed, int argc, char **argv, char **azColName)
+{
+	std::string namez = argv[1];
+	namez += " ";
+	namez += argv[0];
+	score->scoreTexts[dindex]->setText(namez);
+    printf("\n");
+	dindex++;
+    return 0;
+}
 
 SpriteGameObject* createSpriteGameObject(const std::string& bitmapFileName, float sizeX, float sizeY, bool isWhiteTransparentColor = false)
 {
@@ -136,31 +158,34 @@ std::vector<int> parseHighscoreFile(std::string& fileName)
 	}
 
 	highscoreFile.close();
-	//std::sort(highscores.begin(), highscores.end());
+	
 	return highscores;
 }
 
-void writeHighScores(std::string& fileName, int x)
+void writeHighScores(int x)
 {
-	auto scores = parseHighscoreFile(fileName);
-	std::ofstream output(fileName, std::ios::trunc);
 
-	scores.push_back(x);
-	std::sort(scores.begin(), scores.end());
-	std::reverse(scores.begin(), scores.end());
-	scores.resize(5);
+	std::string Scores = "INSERT INTO scores VALUES ("+to_string(x)+",'"+scoreList+"');"; 
 
-	for(size_t i = 0; i < scores.size(); i++)
+	rc = sqlite3_exec(db, Scores.c_str() , NULL, 0, NULL);
+
+	if (rc!=SQLITE_OK)
 	{
-		if(scores[i] > 0)
-			output << scores[i] << std::endl;
+	  fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 	}
-	output.close();
+
 }
 
 //			Initialize the game
 bool init ( ESContext *esContext )
 {	
+	rc = sqlite3_open("highscore.db", &db);
+
+	if (rc)
+	{
+	  fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+	}
+
 	engine->play2D("music.mp3", true);
 
 	srand(time(NULL));
@@ -302,8 +327,14 @@ bool init ( ESContext *esContext )
 	score->fpsText->setPosition(vec2(9,5.4f));
 	objectLayerU->addGameObject(score->fpsText);
 
-	score->nameText1->setPosition(vec2(9,5.4f));
+	score->nameText1->setPosition(vec2(400,400));
 	objectLayerU->addGameObject(score->nameText1);
+
+	score->nameText2->setPosition(vec2(400,400));
+	objectLayerU->addGameObject(score->nameText2);
+
+	score->nameText3->setPosition(vec2(400,400));
+	objectLayerU->addGameObject(score->nameText3);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -334,75 +365,87 @@ void update( ESContext* ctx, float deltaTime )
 		engine->play2D("jump.wav", false);
 	}
 
-	//if(player.isHeDead == true)
-	//{
-	//	engine->play2D("death.wav", false);
-	//}
-
 	switch(gameState)
 	{
 	case 0:
 			menu.background->setPosition(0,0);
-			score->nameText1->setPosition(3,0);
 			insertText.background->setPosition(400,400);
 			dead.background->setPosition(400,400);
-			if(getKeyState(KeyCodes::KEY_RETURN))
-			{
-			gameState = 2;
-			}
+			gameState = 1;
 		break;
 	case 1:
-			insertText.background->setPosition(0,0);
-			score->m_nameText1->setText( to_string(score->letters[score->lindex]));
+
+				switch (letterState)
+					{
+					case 0:
+						insertText.background->setPosition(0,2);
+						score->m_nameText1->setText( to_string(score->letters[score->lindex]));
+						score->nameText1->setPosition(-0.5f,0);
+						break;
+					case 1:
+						score->m_nameText2->setText( to_string(score->letters[score->lindex]));
+						score->nameText2->setPosition(0,0);
+						break;
+					case 2:
+						score->m_nameText3->setText( to_string(score->letters[score->lindex]));
+						score->nameText3->setPosition(0.5f,0);
+						break;
+					case 3: 
+						gameState = 2;
+						menu.background->setPosition(400,400);
+						insertText.background->setPosition(400,400);
+						score->nameText1->setPosition(-0.5f,-5);
+						score->nameText2->setPosition(0,-5);
+						score->nameText3->setPosition(0.5f,-5);
+
+						break;
+					}
+
+
 			if(isButtonPressed == false)
 			{
-
 				if(getKeyState(KeyCodes::KEY_DOWN))
-				{
-					score->lindex++;
-					isButtonPressed = true;
-					if (score->lindex > 25)
 					{
-						score->lindex = 25;
+						score->lindex++;
+						isButtonPressed = true;
+						if (score->lindex > 25)
+						{
+							score->lindex = 25;
+						}
 					}
-				}
 
 				if(getKeyState(KeyCodes::KEY_UP))
-				{
-					score->lindex--;
-					isButtonPressed = true;
-					if (score->lindex < 0)
 					{
-						score->lindex = 0;
+						score->lindex--;
+						isButtonPressed = true;
+						if (score->lindex < 0)
+						{
+							score->lindex = 0;
+						}
 					}
-				}
-				
-			}
-			else
-				if(!getKeyState(KeyCodes::KEY_DOWN) && !getKeyState(KeyCodes::KEY_UP))
+				if(getKeyState(KeyCodes::KEY_RETURN))
 				{
-					isButtonPressed = false;
+					letterState++;
+					scoreList.push_back(score->letters[score->lindex]);
+					isButtonPressed = true;
 				}
+			}
+			else if(!getKeyState(KeyCodes::KEY_DOWN) && !getKeyState(KeyCodes::KEY_UP) && !getKeyState(KeyCodes::KEY_RETURN))
+			{
+				isButtonPressed = false;
+			}
 
-				
-				std::cout << score->lindex << std::endl;
-
-
-			// arrowkeys
-				//lindex ++ --
-				// object -> letters[lindex]
+			std::cout << score->lindex << std::endl;
+		
 		break;
 	case 2:
-			menu.background->setPosition(400,400);
-			dead.background->setPosition(400,400);
 			count++;
 
 			player.Update(deltaTime);
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
 			score->update(deltaTime);
-			score->nameText1->setPosition(400,400);
-			
+
 			if(player.isHeDead == true)
 					{
 						if(isPlayerScreamed == false)
@@ -411,31 +454,24 @@ void update( ESContext* ctx, float deltaTime )
 							engine->play2D("death.wav", false);
 						}
 					}
-
-			for (int i = 0; i < 5; i++)
-			{
-				score->scoreTextObjects[i]->setPosition(vec2(-15,0));
-			}
-			
-			//fps->update(deltaTime);
 			
 			// Update map. this will update all GameObjects inside a map layers.
 			map->update(deltaTime);
 
 
-			for (int i = 0; i < backgrounds.size(); i++)
+			for (size_t i = 0; i < backgrounds.size(); i++)
 			{
 				backgrounds[i].Update(deltaTime);
 			}
 
-			for (int i = 0; i < dangers.size(); i++)
+			for (size_t i = 0; i < dangers.size(); i++)
 			{
 
 				dangers[i].Update(deltaTime);
 				//	Collision between player and danger
 				if (player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
 					&& player.hity > dangers[i].hity - 0.5f 
-					&& player.hity -1.3f < dangers[i].hity + 0.5f /*danger.hit player.hity == danger.hity*/)
+					&& player.hity -1.3f < dangers[i].hity + 0.5f)
 				{
 					if(player.isHeDead == false)
 					{
@@ -480,18 +516,20 @@ void update( ESContext* ctx, float deltaTime )
 				health.newGame();
 				gameState = 3;
 				dead.background->setPosition(0,2);
-				
-				std::string filename = "highscore.txt";
-				writeHighScores(filename, score->highscore);
 			}
 		break;
 	case 3:
-		std::string filename = "highscore.txt";
-		auto scores = parseHighscoreFile(filename);
 
-		for (int i = 0; i < 5; i++)
+		writeHighScores(score->highscore);
+
+		if (isScoresRead == false)
 		{
-			score->scoreTextObjects[i]->getText()->setText(to_string(scores[i]));
+			sqlite3_exec(db, "select * FROM scores ORDER BY score DESC LIMIT 0, 5;", callback, NULL, NULL);
+			isScoresRead = true;
+		}
+
+		for (size_t i = 0; i < score->scoreTexts.size(); i++)
+		{
 			score->scoreTextObjects[i]->setPosition(vec2(7,-4.5f + i*0.5f));
 		}
 
@@ -501,6 +539,14 @@ void update( ESContext* ctx, float deltaTime )
 			player.player->setPosition(-1,2.5);
 			score->m_totalTime = 0;
 			isPlayerScreamed = false;
+			isScoresRead = false;
+			dindex = 0;
+			dead.background->setPosition(400,400);
+
+			for (int i = 0; i < 5; i++)
+			{
+				score->scoreTextObjects[i]->setPosition(vec2(-15,0));
+			}
 		}
 		break;
 	}
@@ -520,11 +566,11 @@ void draw ( ESContext *esContext )
 
 	score->render(0.0f,0.0f);
 
-	//fps->render(0.0f, 0.0f);
-
 	// Render map and all of its layers containing GameObjects to screen.
 	map->render();
 }
+
+
 
 
 int main ( int argc, char *argv[] )
@@ -532,7 +578,7 @@ int main ( int argc, char *argv[] )
 
 	ESContext esContext;
 	esInitContext ( &esContext );
-	esCreateWindow( &esContext, "Rundom: Hippo Edition", 1280, 720, ES_WINDOW_DEFAULT );
+	esCreateWindow( &esContext, "Rundom: Jungle", 1280, 720, ES_WINDOW_DEFAULT );
    
 	if ( !init ( &esContext ) )
 		return 0;
