@@ -79,6 +79,8 @@ public:
 	float m_frameRateCounter; // Ajastin, joka laskee, milloin viimeksi on m_fps-muutttuja p‰ivitetty
 	int m_frameRateFrameCounter; // VAstaava, kuin yll‰, mutta laskee framejen lukum‰‰r‰‰
 
+	void strawberry();
+
 };
 
 

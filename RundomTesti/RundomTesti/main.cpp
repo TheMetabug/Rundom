@@ -59,6 +59,7 @@ Enemy enemy;
 Danger danger;
 Danger danger2;
 Danger danger3;
+Danger notDanger;
 Spark spark1;
 Health health;
 BackGround background1;
@@ -183,7 +184,7 @@ bool init ( ESContext *esContext )
 
 	if (rc)
 	{
-	  fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 	}
 
 	engine->play2D("music.mp3", true);
@@ -264,6 +265,10 @@ bool init ( ESContext *esContext )
 	danger3 = Danger(texturebgDDD,vec2(16,3.2f), 15.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f, 1, 20.0f);
 	objectLayer1->addGameObject(danger3.danger);
 	dangers.push_back(danger3);
+
+	Texture* textureFruit1 =new Texture("mansikka.png");
+	notDanger = Danger(textureFruit1,vec2(16,2.0f), 2.5f, 18, 32.0f, 32.0f, 13.0f, 2.0f, 1, 20.0f);
+	objectLayer1->addGameObject(notDanger.danger);
 
 	Texture* texturebgE =new Texture("hippo2.png");
 	enemy = Enemy(texturebgE,vec2(0,0));
@@ -349,7 +354,12 @@ bool init ( ESContext *esContext )
 void deinit ( ESContext *esContext )
 {
 	engine->drop(); // delete engine
+	sqlite3_close(db);
+
 	delete map;
+	delete score;
+	//delete engine;
+
 }
 
 //						Update game
@@ -357,6 +367,7 @@ void update( ESContext* ctx, float deltaTime )
 {
 	if(getKeyState(KeyCodes::KEY_ESCAPE))
 	{
+		deinit(ctx);
 		exit(0);
 	}
 
@@ -434,8 +445,6 @@ void update( ESContext* ctx, float deltaTime )
 			{
 				isButtonPressed = false;
 			}
-
-			std::cout << score->lindex << std::endl;
 		
 		break;
 	case 2:
@@ -445,15 +454,16 @@ void update( ESContext* ctx, float deltaTime )
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
 			score->update(deltaTime);
+			notDanger.Update(deltaTime);
 
 			if(player.isHeDead == true)
+				{
+					if(isPlayerScreamed == false)
 					{
-						if(isPlayerScreamed == false)
-						{
-							isPlayerScreamed = true;
-							engine->play2D("death.wav", false);
-						}
+						isPlayerScreamed = true;
+						engine->play2D("death.wav", false);
 					}
+				}
 			
 			// Update map. this will update all GameObjects inside a map layers.
 			map->update(deltaTime);
@@ -469,9 +479,7 @@ void update( ESContext* ctx, float deltaTime )
 
 				dangers[i].Update(deltaTime);
 				//	Collision between player and danger
-				if (player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
-					&& player.hity > dangers[i].hity - 0.5f 
-					&& player.hity -1.3f < dangers[i].hity + 0.5f)
+				if (dangers[i].danger->collidesTo(player.player))
 				{
 					if(player.isHeDead == false)
 					{
@@ -489,6 +497,13 @@ void update( ESContext* ctx, float deltaTime )
 						backgrounds[i].Slow();
 					}
 				}
+
+				if (notDanger.danger->collidesTo(player.player))
+				{
+					notDanger.Respawn();
+					health.Medkit();
+					score->strawberry();
+				}
 			}
 			// death by hippo
 			if (player.hitx <= -7.0f)
@@ -499,9 +514,8 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(isPlayerScreamed == false)
 					{
-					isPlayerScreamed = true;
-					engine->play2D("death.wav", false);
-					
+						isPlayerScreamed = true;
+						engine->play2D("death.wav", false);
 					}
 				}
 			}
@@ -520,10 +534,9 @@ void update( ESContext* ctx, float deltaTime )
 		break;
 	case 3:
 
-		writeHighScores(score->highscore);
-
 		if (isScoresRead == false)
 		{
+			writeHighScores(ceil(score->highscore));
 			sqlite3_exec(db, "select * FROM scores ORDER BY score DESC LIMIT 0, 5;", callback, NULL, NULL);
 			isScoresRead = true;
 		}
@@ -537,7 +550,7 @@ void update( ESContext* ctx, float deltaTime )
 		{
 			gameState = 2;
 			player.player->setPosition(-1,2.5);
-			score->m_totalTime = 0;
+			score->highscore = 0;
 			isPlayerScreamed = false;
 			isScoresRead = false;
 			dindex = 0;

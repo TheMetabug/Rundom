@@ -21,7 +21,7 @@ Score::Score(
 	lindex = 0;
 
 	// Create new sprite batch group. This must be deleted at deinit.
-	m_batch = new SpriteBatchGroup();
+	//m_batch = new SpriteBatchGroup();
 
 	// Load font texture. Made with font creation tool like bitmap font builder.
 	m_fontTexture = new Texture(fontTextureFileName);
@@ -69,6 +69,7 @@ Score::Score(
 
 Score::~Score(void)
 {
+	//delete health;
 }
 
 void Score::update(float deltaTime)
@@ -97,10 +98,10 @@ void Score::update(float deltaTime)
 		SpriteBatch::resetStatsValues();
 	}
 
-	highscore = ceil(m_totalTime*100);
+	highscore += deltaTime*100;
 
 	// Set text.
-	m_totalTimeText->setText( "Score : " + to_string(highscore) );
+	m_totalTimeText->setText( "Score : " + to_string(ceil(highscore)) );
 	
 }
 
@@ -111,12 +112,17 @@ void Score::render(float posX, float posY)
 	++m_frameRateFrameCounter;
 
 	// Clear sprite before add new dynamic sprites.
-	m_batch->clear();
+	//m_batch->clear();
 
 	// Add text to position posX + textwidth*0.5, posX
 	//m_batch->addText(m_fontTexture, m_totalTimeText, vec2((float)int(0.5f*m_totalTimeText->getWidth()+posX+0.5f),				posY),			0);
 	//m_batch->addText(m_fontTexture, m_fpsText, vec2((float)int(0.5f*m_fpsText->getWidth()+posX+0.5f),					posY-60.0f),	0);
 	//
 	// Render
-	m_batch->render();
+	//m_batch->render();
+}
+
+void Score::strawberry()
+{
+	highscore += 333;
 }

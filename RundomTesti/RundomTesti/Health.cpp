@@ -10,7 +10,6 @@ Health::Health(void)
 
 Health::~Health(void)
 {
-
 }
 
 Health::Health(yam2d::Texture* _texture, yam2d::vec2 _position)
@@ -58,6 +57,10 @@ void Health::Update(float deltaTime)
 	{
 		hp = 0;
 	}
+	if (hp > 4)
+	{
+		hp = 4;
+	}
 	if (hp == -1)
 	{
 		health->setActiveAnimation(0);
@@ -97,4 +100,9 @@ void Health::Hit()
 void Health::newGame()
 {
 	hp = 4;
+}
+
+void Health::Medkit()
+{
+	hp++;
 }

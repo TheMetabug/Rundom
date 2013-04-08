@@ -18,6 +18,7 @@ public:
 	yam2d::vec2 position;
 	yam2d::Texture* texture;
 	void Hit();
+	void Medkit();
 	void newGame();
 	void Update(float deltaTime);
 };
