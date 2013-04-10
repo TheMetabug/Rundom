@@ -18,7 +18,9 @@
 #include "Spark.h"
 #include "Health.h"
 #include "Score.h"
+#include "Buttons.h"
 #include <algorithm>
+
 template <class T>
 std::string to_string(T t)
 {
@@ -29,10 +31,6 @@ std::string to_string(T t)
 
 using namespace yam2d;
 using namespace irrklang;
-//using namespace std;
-
-
-
 
 namespace
 {
@@ -48,11 +46,11 @@ namespace
 	int rc;
 
 	std::string scoreList;
-	
 }
 
 std::vector <Danger> dangers;
 std::vector <BackGround> backgrounds;
+std::vector <Buttons> buttons;
 
 Player player;
 Enemy enemy;
@@ -71,6 +69,7 @@ BackGround stepground2;
 BackGround menu;
 BackGround dead;
 BackGround insertText;
+Buttons button1;
 Score* score;
 Map* map = 0;
 
@@ -200,8 +199,6 @@ bool init ( ESContext *esContext )
 	double speedground = 4.0f;
 	double speedgroundmax = 10.0f;
 
-
-
 	// Level tile size
 	vec2 tileSize(64,64);
 
@@ -252,7 +249,7 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::MAPLAYER1, objectLayer1 );
 
 	Texture* texturebgD =new Texture("dangerlady1.png");
-	danger = Danger(texturebgD,vec2(16,1), 8.5f, 10, 50.0f, 50.0f, 13.0f, 1, 4, 10.0f);
+	danger = Danger(texturebgD,vec2(16,1), 8.5f, 18, 50.0f, 50.0f, 13.0f, 1, 4, 10.0f);
 	objectLayer1->addGameObject(danger.danger);
 	dangers.push_back(danger);
 
@@ -319,9 +316,14 @@ bool init ( ESContext *esContext )
 	map->addLayer(Map::GUILAYER3, objectLayerU);
 	//InsertText
 	Texture* textureInsert =new Texture("insertname.png");
-	insertText = BackGround(textureInsert,vec2(0,0), 0, 0, 125.0f, 41.0f, 0);
+	insertText = BackGround(textureInsert,vec2(0,-6), 0, 0, 250.0f, 100.0f, 0);
 	objectLayerM->addGameObject(insertText.background);
 	backgrounds.push_back(insertText);
+
+	Texture* textureButton1 = new Texture("button1.png");
+	button1 = Buttons(textureButton1, vec2(0,-2),1);
+	objectLayerU->addGameObject(button1.buttons);
+	buttons.push_back(button1);
 
 
 //Text objects
@@ -358,8 +360,6 @@ void deinit ( ESContext *esContext )
 
 	delete map;
 	delete score;
-	//delete engine;
-
 }
 
 //						Update game
@@ -376,42 +376,69 @@ void update( ESContext* ctx, float deltaTime )
 		engine->play2D("jump.wav", false);
 	}
 
+	int number = button1.Update(deltaTime);
+
+
+
 	switch(gameState)
 	{
 	case 0:
 			menu.background->setPosition(0,0);
 			insertText.background->setPosition(400,400);
 			dead.background->setPosition(400,400);
-			gameState = 1;
+			//gameState = 1;
+			button1.buttons->setPosition(-6, 1);
+			switch (number)
+			{
+				case 1:
+					gameState = 1;
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+			}
 		break;
 	case 1:
-
-				switch (letterState)
-					{
-					case 0:
-						insertText.background->setPosition(0,2);
-						score->m_nameText1->setText( to_string(score->letters[score->lindex]));
-						score->nameText1->setPosition(-0.5f,0);
-						break;
+		insertText.background->setPosition(0,0.35f);
+		switch (letterState)
+			{
+			case 0:
+				button1.buttons->setPosition(-400, 400);
+				insertText.background->setPosition(0,0.35f);
+				score->m_nameText1->setText( to_string(score->letters[score->lindex]));
+				score->nameText1->setPosition(-0.5f,0);
+				break;
+			case 1:
+				score->m_nameText2->setText( to_string(score->letters[score->lindex]));
+				score->nameText2->setPosition(0,0);
+				break;
+			case 2:
+				score->m_nameText3->setText( to_string(score->letters[score->lindex]));
+				score->nameText3->setPosition(0.5f,0);
+				break;
+			case 3: 
+				//gameState = 2;
+				button1.buttons->setPosition(4, 4);
+				switch (number)
+				{
 					case 1:
-						score->m_nameText2->setText( to_string(score->letters[score->lindex]));
-						score->nameText2->setPosition(0,0);
-						break;
-					case 2:
-						score->m_nameText3->setText( to_string(score->letters[score->lindex]));
-						score->nameText3->setPosition(0.5f,0);
-						break;
-					case 3: 
 						gameState = 2;
 						menu.background->setPosition(400,400);
 						insertText.background->setPosition(400,400);
 						score->nameText1->setPosition(-0.5f,-5);
 						score->nameText2->setPosition(0,-5);
 						score->nameText3->setPosition(0.5f,-5);
-
 						break;
-					}
+					case 2:
+						break;
+					case 3:
+						break;
+				}
+				break;
+				}
 
+		
 
 			if(isButtonPressed == false)
 			{
@@ -445,16 +472,22 @@ void update( ESContext* ctx, float deltaTime )
 			{
 				isButtonPressed = false;
 			}
-		
 		break;
 	case 2:
 			count++;
+
+			dangers[0].speed = 8.5f * (1 + score->highscore/20000);
+			dangers[1].speed = 3.5f * (1 + score->highscore/20000);
+			dangers[2].speed = 15.5f * (1 + score->highscore/20000);
 
 			player.Update(deltaTime);
 			enemy.Update(deltaTime);
 			health.Update(deltaTime);
 			score->update(deltaTime);
 			notDanger.Update(deltaTime);
+			map->update(deltaTime);
+
+			score->highscore += backgrounds[0].boost/10;
 
 			if(player.isHeDead == true)
 				{
@@ -465,10 +498,6 @@ void update( ESContext* ctx, float deltaTime )
 					}
 				}
 			
-			// Update map. this will update all GameObjects inside a map layers.
-			map->update(deltaTime);
-
-
 			for (size_t i = 0; i < backgrounds.size(); i++)
 			{
 				backgrounds[i].Update(deltaTime);
@@ -479,7 +508,9 @@ void update( ESContext* ctx, float deltaTime )
 
 				dangers[i].Update(deltaTime);
 				//	Collision between player and danger
-				if (dangers[i].danger->collidesTo(player.player))
+				if ((player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
+					&& player.hity > dangers[i].hity - 0.5f 
+					&& player.hity -1.3f < dangers[i].hity + 0.5f /*danger.hit player.hity == danger.hity*/))
 				{
 					if(player.isHeDead == false)
 					{
@@ -506,7 +537,7 @@ void update( ESContext* ctx, float deltaTime )
 				}
 			}
 			// death by hippo
-			if (player.hitx <= -7.0f)
+			if (player.hitx <= -6.0f)
 			{
 				health.hp = 0;
 				player.Death();
@@ -525,6 +556,7 @@ void update( ESContext* ctx, float deltaTime )
 				dangers[0].Respawn();
 				dangers[1].Respawn();
 				dangers[2].Respawn();
+				notDanger.Respawn();
 				player.die = 0;
 				engine->play2D("deathscreen.wav", false);
 				health.newGame();
@@ -533,7 +565,6 @@ void update( ESContext* ctx, float deltaTime )
 			}
 		break;
 	case 3:
-
 		if (isScoresRead == false)
 		{
 			writeHighScores(ceil(score->highscore));
@@ -570,16 +601,14 @@ void update( ESContext* ctx, float deltaTime )
 //			Draw game
 void draw ( ESContext *esContext )
 {
-	glClearColor( 0.1f, 0.1f, 0.1f, 0.0f );
+	glClearColor( 1.0f, 1.0f, 1.0f, 0.0f );
 
 	glClear ( GL_COLOR_BUFFER_BIT );
 
-	// Set screen size to camera.
 	map->getCamera()->setScreenSize(esContext->width,esContext->height); 
 
 	score->render(0.0f,0.0f);
 
-	// Render map and all of its layers containing GameObjects to screen.
 	map->render();
 }
 

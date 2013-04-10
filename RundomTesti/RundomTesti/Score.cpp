@@ -78,7 +78,7 @@ void Score::update(float deltaTime)
 	// Increase total time
 	if (health->hp != 0)
 	{
-		m_totalTime += deltaTime;
+		highscore += deltaTime*100;
 	}
 
 	m_frameRateCounter += deltaTime;
@@ -86,8 +86,6 @@ void Score::update(float deltaTime)
 	if( m_frameRateCounter > .2f )
 	{
 		m_fps = float(m_frameRateFrameCounter) / m_frameRateCounter;
-
-		//std::cout << m_fps << std::endl;
 
 		m_fpsText->setText(	"FPS: "	+ to_string(floor(m_fps)) );
 		// Nollaa laskurit
@@ -98,7 +96,6 @@ void Score::update(float deltaTime)
 		SpriteBatch::resetStatsValues();
 	}
 
-	highscore += deltaTime*100;
 
 	// Set text.
 	m_totalTimeText->setText( "Score : " + to_string(ceil(highscore)) );
