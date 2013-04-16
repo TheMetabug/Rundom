@@ -104,6 +104,13 @@ public:
 		return m_clips.size();
 	}
 
+	SpriteAnimationClip& getAnimation( int animationId )
+	{
+		assert( animationId >= 0 && size_t(animationId) < m_clips.size() );
+		return m_clips[animationId];
+	}
+
+
 	bool isFinished()
 	{
 		return m_isFinished;

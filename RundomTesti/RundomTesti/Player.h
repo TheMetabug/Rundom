@@ -28,6 +28,9 @@ public:
 	double hity;
 	void DangerHit();
 	void Death();
+	void Slow();
 	float boost;
+	double speed;
+	double speedmax;
 };
 

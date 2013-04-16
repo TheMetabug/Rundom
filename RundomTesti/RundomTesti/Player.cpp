@@ -28,7 +28,7 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 
 	int numClipsPerAnimation = 8;
 	boost = 0;
-	float animationFrameRate = 20.0f;
+	float animationFrameRate = 10.0f;
 	for( int i=0; i<4; ++i )
 	{
 		std::vector<int> indices;
@@ -47,6 +47,7 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 		{
 			player->addAnimation(i, SpriteAnimation::SpriteAnimationClip(indices,animationFrameRate, 1.0f, false));
 		}
+
 	}
 	player->setPosition(_position);
 	player->setActiveAnimation(0);
@@ -56,19 +57,12 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 	die = 0;
 
 
+
 }
 void Player::Update(float deltaTime)
 {
 	count++;
 	hyppyvoima -= 0.05f;
-	//player->animationFrameRate += boost;
-
-	boost += 0.02f;
-	if (boost >= 10)
-	{
-		std::cout << boost << std::endl;
-		boost = 10;
-	}
 	//player->getActiveAnimation();
 
 	if (die == 0)
@@ -159,6 +153,18 @@ void Player::Update(float deltaTime)
 		isHeDead = true;
 		die = 1;
 	}
+
+	//player runs faster
+
+	boost += 0.01f;
+	if (boost >= 20)
+	{
+		boost = 20;
+	}
+
+	player->getAnimation(0).animationFPS = 10.0f + (int)boost;
+
+	std::cout << boost << " " << player->getAnimation(0).animationFPS << std::endl;
 }
 
 void Player::DangerHit()
@@ -172,4 +178,9 @@ void Player::Death()
 {
 		die = 1;
 		isHeDead = true;
+}
+
+void Player::Slow()
+{
+	boost = boost/2;
 }

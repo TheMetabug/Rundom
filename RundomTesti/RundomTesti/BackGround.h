@@ -3,8 +3,7 @@
 #include <Map.h>
 #include <Tile.h>
 #include <Layer.h>
-#include <Input.h>
-#include <iostream>
+//#include <iostream>
 #include <string.h>
 #include <SpriteGameObject.h>
 class BackGround

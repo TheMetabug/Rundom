@@ -31,10 +31,8 @@ BackGround::BackGround(yam2d::Texture* _texture, yam2d::vec2 _position, double _
 void BackGround::Update(float deltaTime)
 {
 	boost += 0.01f;
-	std::cout << "  " << boost << std::endl; 
 	if (boost >= speedmax)
 	{
-		std::cout << boost << std::endl;
 		boost = speedmax;
 	}
 	background->setPosition(background->getPosition()-vec2((speed + boost)*deltaTime,0.0f));

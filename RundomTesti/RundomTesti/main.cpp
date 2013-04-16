@@ -34,17 +34,23 @@ using namespace irrklang;
 
 namespace
 {
+	// Enable sound engine IrrKlang
 	ISoundEngine* engine = createIrrKlangDevice();
+
 	float count = 0;
+
 	int gameState = 0;
 	int letterState = 0;
+	int rc;
+	int dindex = 0;
+
 	bool isButtonPressed = false;
 	bool isPlayerScreamed = false;
 	bool isScoresRead = false;
-	int dindex = 0;
-	sqlite3 *db;
-	int rc;
 
+	// Enable SQLite
+	sqlite3 *db;
+	
 	std::string scoreList;
 }
 
@@ -419,22 +425,20 @@ void update( ESContext* ctx, float deltaTime )
 				break;
 			case 3: 
 				//gameState = 2;
-				button1.buttons->setPosition(4, 4);
-				switch (number)
-				{
-					case 1:
-						gameState = 2;
+				//button1.buttons->setPosition(4, 4);
+
+
+						if(getKeyState(KeyCodes::KEY_RETURN))
+						{
 						menu.background->setPosition(400,400);
 						insertText.background->setPosition(400,400);
 						score->nameText1->setPosition(-0.5f,-5);
 						score->nameText2->setPosition(0,-5);
 						score->nameText3->setPosition(0.5f,-5);
-						break;
-					case 2:
-						break;
-					case 3:
-						break;
-				}
+
+						gameState = 2;
+						}
+
 				break;
 				}
 
@@ -476,6 +480,8 @@ void update( ESContext* ctx, float deltaTime )
 	case 2:
 			count++;
 
+			button1.buttons->setPosition(400, 400);
+
 			dangers[0].speed = 8.5f * (1 + score->highscore/20000);
 			dangers[1].speed = 3.5f * (1 + score->highscore/20000);
 			dangers[2].speed = 15.5f * (1 + score->highscore/20000);
@@ -510,7 +516,7 @@ void update( ESContext* ctx, float deltaTime )
 				//	Collision between player and danger
 				if ((player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
 					&& player.hity > dangers[i].hity - 0.5f 
-					&& player.hity -1.3f < dangers[i].hity + 0.5f /*danger.hit player.hity == danger.hity*/))
+					&& player.hity -1.3f < dangers[i].hity + 0.5f))
 				{
 					if(player.isHeDead == false)
 					{
@@ -527,6 +533,8 @@ void update( ESContext* ctx, float deltaTime )
 					{
 						backgrounds[i].Slow();
 					}
+				// player slow effect
+					player.Slow();
 				}
 
 				if (notDanger.danger->collidesTo(player.player))

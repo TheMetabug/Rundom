@@ -88,6 +88,11 @@ public:
 
 	void render( Layer* layer);
 
+	SpriteAnimation::SpriteAnimationClip& getAnimation(int animationId )
+	{
+		return m_animation->getAnimation(animationId);
+	}
+
 private:
 	Ref<SpriteAnimation> m_animation;
 
