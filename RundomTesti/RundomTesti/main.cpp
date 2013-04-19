@@ -310,7 +310,7 @@ bool init ( ESContext *esContext )
 //				_MENULAYER_
 	map->addLayer(Map::GUILAYER2, objectLayerM );
 //StartMenu
-	Texture* texturemenu =new Texture("Menu2.png");
+	Texture* texturemenu =new Texture("menu3.png");
 	menu = BackGround(texturemenu,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(menu.background);
 	backgrounds.push_back(menu);
@@ -326,7 +326,7 @@ bool init ( ESContext *esContext )
 	objectLayerM->addGameObject(insertText.background);
 	backgrounds.push_back(insertText);
 
-	Texture* textureButton1 = new Texture("button1.png");
+	Texture* textureButton1 = new Texture("button2.png");
 	button1 = Buttons(textureButton1, vec2(0,-2),1);
 	objectLayerU->addGameObject(button1.buttons);
 	buttons.push_back(button1);
@@ -368,7 +368,7 @@ void deinit ( ESContext *esContext )
 	delete score;
 }
 
-//						Update game
+//						Update game5
 void update( ESContext* ctx, float deltaTime )
 {
 	if(getKeyState(KeyCodes::KEY_ESCAPE))
@@ -406,10 +406,11 @@ void update( ESContext* ctx, float deltaTime )
 			}
 		break;
 	case 1:
-		insertText.background->setPosition(0,0.35f);
+		
 		switch (letterState)
 			{
 			case 0:
+				insertText.background->setPosition(0,0.35f);
 				button1.buttons->setPosition(-400, 400);
 				insertText.background->setPosition(0,0.35f);
 				score->m_nameText1->setText( to_string(score->letters[score->lindex]));
