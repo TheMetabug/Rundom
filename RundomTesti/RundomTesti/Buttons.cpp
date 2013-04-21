@@ -52,7 +52,7 @@ int Buttons::Update(float deltaTime)
 		getMouseAxisY() - 360 <= buttons->getPosition().y * 64 + texture->getHeight()/6) 
 	{
 		buttons->setActiveAnimation(1);
-		std::cout << getMouseAxisX() << std::endl;
+		//std::cout << getMouseAxisX() << std::endl;
 		if(getMouseButtonState(MouseButtons::MOUSE_LEFT))
 		{
 			buttons->setActiveAnimation(2);

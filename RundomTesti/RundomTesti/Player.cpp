@@ -164,7 +164,7 @@ void Player::Update(float deltaTime)
 
 	player->getAnimation(0).animationFPS = 10.0f + (int)boost;
 
-	std::cout << boost << " " << player->getAnimation(0).animationFPS << std::endl;
+	//std::cout << boost << " " << player->getAnimation(0).animationFPS << std::endl;
 }
 
 void Player::DangerHit()

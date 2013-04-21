@@ -44,6 +44,15 @@ namespace
 	int rc;
 	int dindex = 0;
 
+	int autsphase = 0;
+	int autsrand = 0;
+	int nomphase = 0;
+	int nomrand = 0;
+	int hopphase = 0;
+	int hoprand = 0;
+	int noophase = 0;
+	int noorand = 0;
+
 	bool isButtonPressed = false;
 	bool isPlayerScreamed = false;
 	bool isScoresRead = false;
@@ -78,6 +87,7 @@ BackGround insertText;
 Buttons button1;
 Score* score;
 Map* map = 0;
+
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
@@ -192,7 +202,7 @@ bool init ( ESContext *esContext )
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 	}
 
-	engine->play2D("music.mp3", true);
+	engine->play2D("music.wav", true);
 
 	srand(time(NULL));
 
@@ -379,7 +389,38 @@ void update( ESContext* ctx, float deltaTime )
 
 	if(player.isHeJumping == true)
 	{
-		engine->play2D("jump.wav", false);
+		hoprand = rand() %80;
+		std::cout << hoprand << std::endl;
+		if(hoprand >= 0 && hoprand <=25)
+		{
+			hopphase = 1;
+		}
+		else if(hoprand >= 26 && hoprand <=45)
+		{
+			hopphase = 2;
+		}
+		else if(hoprand >= 46 && hoprand <=80)
+		{
+			hopphase = 3;
+		}
+
+		switch(hopphase%4)
+		{
+			case 0:
+				break;
+			case 1:
+				engine->play2D("hop2.wav", false);
+				hopphase = 0;
+				break;
+			case 2:
+				engine->play2D("hop4.wav", false);
+				hopphase = 0;
+				break;
+			case 3:
+				engine->play2D("hop1.wav", false);
+				hopphase = 0;
+				break;
+		}
 	}
 
 	int number = button1.Update(deltaTime);
@@ -427,23 +468,19 @@ void update( ESContext* ctx, float deltaTime )
 			case 3: 
 				//gameState = 2;
 				//button1.buttons->setPosition(4, 4);
+				if(getKeyState(KeyCodes::KEY_RETURN))
+				{
+					menu.background->setPosition(400,400);
+					insertText.background->setPosition(400,400);
+					score->nameText1->setPosition(-0.5f,-5);
+					score->nameText2->setPosition(0,-5);
+					score->nameText3->setPosition(0.5f,-5);
 
-
-						if(getKeyState(KeyCodes::KEY_RETURN))
-						{
-						menu.background->setPosition(400,400);
-						insertText.background->setPosition(400,400);
-						score->nameText1->setPosition(-0.5f,-5);
-						score->nameText2->setPosition(0,-5);
-						score->nameText3->setPosition(0.5f,-5);
-
-						gameState = 2;
-						}
+					gameState = 2;
+				}
 
 				break;
 				}
-
-		
 
 			if(isButtonPressed == false)
 			{
@@ -466,6 +503,7 @@ void update( ESContext* ctx, float deltaTime )
 							score->lindex = 0;
 						}
 					}
+
 				if(getKeyState(KeyCodes::KEY_RETURN))
 				{
 					letterState++;
@@ -500,8 +538,40 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(isPlayerScreamed == false)
 					{
+						noorand = rand() %80;
+						//std::cout << noorand << std::endl;
+						if(noorand >= 0 && noorand <=25)
+						{
+							noophase = 1;
+						}
+						else if(noorand >= 26 && noorand <=45)
+						{
+							noophase = 2;
+						}
+						else if(noorand >= 46 && noorand <=80)
+						{
+							noophase = 3;
+						}
+					switch(noophase%3)
+					{
+					case 0:
+
+						break;
+					case 1:
+						engine->play2D("noo1.wav", false);
+						noophase = 0;
+						break;
+					case 2:
+						engine->play2D("noo2.wav", false);
+						noophase = 0;
+						break;
+					case 3:
+						engine->play2D("noo3.wav", false);
+						noophase = 0;
+						break;
+						}
 						isPlayerScreamed = true;
-						engine->play2D("death.wav", false);
+						//engine->play2D("deathh1.wav", false);
 					}
 				}
 			
@@ -521,7 +591,22 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(player.isHeDead == false)
 					{
-						engine->play2D("ouch.wav", false);
+						switch(autsphase%3)
+								{
+									case 0:
+										engine->play2D("auts1.wav", false);
+										autsphase++;
+										break;
+									case 1:
+										engine->play2D("auts2.wav", false);
+										autsphase++;
+										break;
+									case 2:
+										engine->play2D("auts3.wav", false);
+										autsphase++;
+										break;
+								}
+						//engine->play2D("ouch.wav", false);
 					}
 					dangers[i].Respawn();
 					player.DangerHit();
@@ -538,8 +623,25 @@ void update( ESContext* ctx, float deltaTime )
 					player.Slow();
 				}
 
+				// Player pickups a bonus
 				if (notDanger.danger->collidesTo(player.player))
 				{
+					switch(nomphase%3)
+						{
+							case 0:
+								engine->play2D("omnom1.wav", false);
+								nomphase++;
+								break;
+							case 1:
+								engine->play2D("omnom2.wav", false);
+								nomphase++;
+								break;
+							case 2:
+								engine->play2D("omnom3.wav", false);
+								nomphase++;
+								break;
+						}
+					//engine->play2D("pickup1.wav", false);
 					notDanger.Respawn();
 					health.Medkit();
 					score->strawberry();
@@ -554,8 +656,40 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(isPlayerScreamed == false)
 					{
+						noorand = rand() %80;
+						//std::cout << noorand << std::endl;
+						if(noorand >= 0 && noorand <=25)
+						{
+							noophase = 1;
+						}
+						else if(noorand >= 26 && noorand <=45)
+						{
+							noophase = 2;
+						}
+						else if(noorand >= 46 && noorand <=80)
+						{
+							noophase = 3;
+						}
+					switch(noophase%3)
+					{
+					case 0:
+
+						break;
+					case 1:
+						engine->play2D("noo1.wav", false);
+						noophase = 0;
+						break;
+					case 2:
+						engine->play2D("noo2.wav", false);
+						noophase = 0;
+						break;
+					case 3:
+						engine->play2D("noo3.wav", false);
+						noophase = 0;
+						break;
+						}
 						isPlayerScreamed = true;
-						engine->play2D("death.wav", false);
+						//engine->play2D("death1.wav", false);
 					}
 				}
 			}
