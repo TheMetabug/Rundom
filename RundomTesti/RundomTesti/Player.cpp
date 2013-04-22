@@ -5,6 +5,11 @@ using namespace yam2d;
 float count = 0.0f;
 float hyppyvoima = 0;
 float kipuvoima = 0;
+float hippovoima = 0;
+float blinkTime = 0;
+int blinkPhase = 0;
+int blinkCount = 0;
+//bool isHeBlinking = false;
 bool isHeJumping = false;
 bool isHeDead = false;
 
@@ -25,7 +30,7 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 		player->setPosition(_position);
 
 		this->health = health;
-
+	isHeBlinking = false;
 	int numClipsPerAnimation = 8;
 	boost = 0;
 	float animationFrameRate = 10.0f;
@@ -55,10 +60,8 @@ Player::Player(Texture* _texture, vec2 _position, Health *health)
 	hitx = 0;
 	hity = 0;
 	die = 0;
-
-
-
 }
+
 void Player::Update(float deltaTime)
 {
 	count++;
@@ -110,7 +113,7 @@ void Player::Update(float deltaTime)
 			player->setRotation(count/2.5f);
 			player->setPosition(player->getPosition() - vec2(0.0f,hyppyvoima/4));
 		}
-	
+	// osuminen viholliseen
 		if (kipuvoima > 0)
 		{
 			player->setRotation(-count/2);
@@ -128,7 +131,29 @@ void Player::Update(float deltaTime)
 				{
 					kipuvoima = 0;
 				}
+		}
 
+		// hippoon osuminen
+
+
+			if (hippovoima > 0)
+			{
+				player->setRotation(-count/2);
+				player->setPosition(player->getPosition() + vec2(hippovoima,-hippovoima/2));
+				hippovoima -= 0.05f;
+			}
+			
+			if (hippovoima < 0 )
+			{
+				player->setRotation(-count/2);
+				player->setPosition(player->getPosition() + vec2(-hippovoima/2,-hippovoima/4));
+				hippovoima -= 0.05f;
+
+				if (player->getPosition().y >= 2.5f)
+					{
+						hippovoima = 0;
+					}
+			
 		}
 
 	hitx = player->getPosition().x;
@@ -165,12 +190,56 @@ void Player::Update(float deltaTime)
 	player->getAnimation(0).animationFPS = 10.0f + (int)boost;
 
 	//std::cout << boost << " " << player->getAnimation(0).animationFPS << std::endl;
+
+	if(isHeBlinking == true)
+	{
+		switch (blinkPhase%2)
+		{
+		case 0:
+			if(blinkTime <= 0)
+			{
+				blinkTime = 3;
+				blinkPhase++;
+				blinkCount++;
+				player->setSize(0,0);
+			}
+			break;
+		case 1:
+			if(blinkTime <= 0)
+			{
+				blinkTime = 15;
+				blinkPhase++;
+				player->setSize(128,128);
+				blinkCount++;
+				if(blinkCount >= 10)
+				{
+					isHeBlinking = false;
+					blinkCount = 0;
+				}
+			}
+			break;
+		}
+		std::cout << blinkTime << std::endl;
+		blinkTime--;
+	}
+
+
+ 
 }
 
 void Player::DangerHit()
 {
+		hippovoima = 0;
 		hyppyvoima = 0;
 		kipuvoima = 0.6f;
+		health->hp -= 1;
+}
+
+void Player::HippoHit()
+{
+		hyppyvoima = 0;
+		hippovoima = 0.6f;
+		kipuvoima = 0;
 		health->hp -= 1;
 }
 
@@ -178,9 +247,16 @@ void Player::Death()
 {
 		die = 1;
 		isHeDead = true;
+		std::cout << "KUOLI SAATANA" << std::endl;
 }
 
 void Player::Slow()
 {
 	boost = boost/2;
+}
+
+void Player::Blink()
+{
+	isHeBlinking = true;
+	blinkPhase = 0;
 }

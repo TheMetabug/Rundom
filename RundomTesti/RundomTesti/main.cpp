@@ -587,7 +587,7 @@ void update( ESContext* ctx, float deltaTime )
 				//	Collision between player and danger
 				if ((player.hitx > dangers[i].hitx - 0.6f && player.hitx < dangers[i].hitx + 0.8f 
 					&& player.hity > dangers[i].hity - 0.5f 
-					&& player.hity -1.3f < dangers[i].hity + 0.5f))
+					&& player.hity -1.3f < dangers[i].hity + 0.5f) && player.isHeBlinking == false)
 				{
 					if(player.isHeDead == false)
 					{
@@ -610,6 +610,7 @@ void update( ESContext* ctx, float deltaTime )
 					}
 					dangers[i].Respawn();
 					player.DangerHit();
+					player.Blink();
 					
 				// spark effect
 					spark1.Hit();
@@ -650,8 +651,9 @@ void update( ESContext* ctx, float deltaTime )
 			// death by hippo
 			if (player.hitx <= -6.0f)
 			{
-				health.hp = 0;
-				player.Death();
+				//health.hp = 0;
+				//player.Death();
+				player.HippoHit();
 				if(player.isHeDead == true)
 				{
 					if(isPlayerScreamed == false)
@@ -744,7 +746,7 @@ void update( ESContext* ctx, float deltaTime )
 //			Draw game
 void draw ( ESContext *esContext )
 {
-	glClearColor( 1.0f, 1.0f, 1.0f, 0.0f );
+	glClearColor( 0.0f, 0.0f, 1.0f, 0.0f );
 
 	glClear ( GL_COLOR_BUFFER_BIT );
 

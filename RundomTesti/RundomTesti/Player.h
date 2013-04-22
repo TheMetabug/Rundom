@@ -22,6 +22,7 @@ public:
 
 	bool isHeJumping;
 	bool isHeDead;
+	bool isHeBlinking;
 	int die;
 	void Update(float deltaTime);
 	double hitx;
@@ -29,6 +30,8 @@ public:
 	void DangerHit();
 	void Death();
 	void Slow();
+	void HippoHit();
+	void Blink();
 	float boost;
 	double speed;
 	double speedmax;
