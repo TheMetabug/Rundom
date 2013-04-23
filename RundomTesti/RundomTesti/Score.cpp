@@ -123,3 +123,11 @@ void Score::strawberry()
 {
 	highscore += 333;
 }
+void Score::banaani()
+{
+	highscore += 555;
+}
+void Score::omena()
+{
+	highscore += 444;
+}

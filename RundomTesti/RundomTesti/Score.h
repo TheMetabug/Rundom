@@ -80,6 +80,8 @@ public:
 	int m_frameRateFrameCounter; // VAstaava, kuin yll‰, mutta laskee framejen lukum‰‰r‰‰
 
 	void strawberry();
+	void banaani();
+	void omena();
 
 };
 

@@ -73,6 +73,8 @@ Danger danger;
 Danger danger2;
 Danger danger3;
 Danger notDanger;
+Danger apple;
+Danger banana;
 Spark spark1;
 Health health;
 BackGround background1;
@@ -280,13 +282,21 @@ bool init ( ESContext *esContext )
 	dangers.push_back(danger2);
 
 	Texture* texturebgDDD =new Texture("cheeta.png");
-	danger3 = Danger(texturebgDDD,vec2(16,3.0f), 15.5f, 0, 94.0f, 80.0f, 13.0f, 3.0f, 6, 20.0f);
+	danger3 = Danger(texturebgDDD,vec2(16,3.1f), 15.5f, 0, 94.0f, 50.0f, 13.0f, 3.1f, 6, 20.0f);
 	objectLayer1->addGameObject(danger3.danger);
 	dangers.push_back(danger3);
 
 	Texture* textureFruit1 =new Texture("mansikka.png");
-	notDanger = Danger(textureFruit1,vec2(16,2.0f), 2.5f, 18, 32.0f, 32.0f, 13.0f, 2.0f, 1, 20.0f);
+	notDanger = Danger(textureFruit1,vec2(29,2.0f), 2.5f, 13, 32.0f, 32.0f, 13.0f, 2.0f, 1, 20.0f);
 	objectLayer1->addGameObject(notDanger.danger);
+
+	Texture* textureFruit2 =new Texture("banana.png");
+	banana = Danger(textureFruit2,vec2(18,2.0f), 2.5f, 18, 32.0f, 32.0f, 13.0f, 2.0f, 1, 20.0f);
+	objectLayer1->addGameObject(banana.danger);
+
+	Texture* textureFruit3 =new Texture("omena.png");
+	apple = Danger(textureFruit3,vec2(40,2.0f), 2.5f, 23, 32.0f, 32.0f, 13.0f, 2.0f, 1, 20.0f);
+	objectLayer1->addGameObject(apple.danger);
 
 	Texture* texturebgE =new Texture("hippo2.png");
 	enemy = Enemy(texturebgE,vec2(0,0));
@@ -325,7 +335,7 @@ bool init ( ESContext *esContext )
 //				_MENULAYER_
 	map->addLayer(Map::GUILAYER2, objectLayerM );
 //StartMenu
-	Texture* texturemenu =new Texture("menu3.png");
+	Texture* texturemenu =new Texture("menu4.png");
 	menu = BackGround(texturemenu,vec2(0,0), 0, 0, 1280.0f, 720.0f, 0);
 	objectLayerM->addGameObject(menu.background);
 	backgrounds.push_back(menu);
@@ -504,6 +514,8 @@ void update( ESContext* ctx, float deltaTime )
 			health.Update(deltaTime);
 			score->update(deltaTime);
 			notDanger.Update(deltaTime);
+			apple.Update(deltaTime);
+			banana.Update(deltaTime);
 			map->update(deltaTime);
 
 			score->highscore += backgrounds[0].boost/10;
@@ -559,6 +571,24 @@ void update( ESContext* ctx, float deltaTime )
 					notDanger.Respawn();
 					health.Medkit();
 					score->strawberry();
+				}
+				// Player pickups a bonus
+				if (banana.danger->collidesTo(player.player))
+				{
+					PlayNom();
+					//engine->play2D("pickup1.wav", false);
+					banana.Respawn();
+					//health.Medkit();
+					score->banaani();
+				}
+				// Player pickups a bonus
+				if (apple.danger->collidesTo(player.player))
+				{
+					PlayNom();
+					//engine->play2D("pickup1.wav", false);
+					apple.Respawn();
+					//health.Medkit();
+					score->omena();
 				}
 			}
 			// Hit hippo

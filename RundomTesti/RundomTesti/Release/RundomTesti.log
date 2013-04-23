@@ -1,91 +1,12 @@
-﻿Build started 23.4.2013 8:22:38.
-     1>Project "C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\RundomTesti\RundomTesti\RundomTesti.vcxproj" on node 3 (build target(s)).
+﻿Build started 23.4.2013 14:43:42.
+     1>Project "C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\RundomTesti\RundomTesti\RundomTesti.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Release\MapFromScratch.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\TTI12SAskoL\Documents\GitHub\Rundom\yam2d\\engine\include\ /IC:\Users\TTI12SAskoL\Documents\GitHub\Rundom\yam2d\\engine\external\ /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt BackGround.cpp Buttons.cpp Danger.cpp Enemy.cpp Health.cpp main.cpp Particles.cpp Player.cpp Save.cpp Score.cpp Spark.cpp
-         BackGround.cpp
-     1>BackGround.cpp(21): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>BackGround.cpp(21): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>BackGround.cpp(36): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>BackGround.cpp(38): warning C4244: 'argument' : conversion from 'double' to 'float32', possible loss of data
-         Buttons.cpp
-     1>Buttons.cpp(23): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>Buttons.cpp(23): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>Buttons.cpp(56): warning C4482: nonstandard extension used: enum 'yam2d::MouseButtons' used in qualified name
-     1>Buttons.cpp(46): warning C4100: 'deltaTime' : unreferenced formal parameter
-         Danger.cpp
-     1>Danger.cpp(25): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>Danger.cpp(25): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>Danger.cpp(68): warning C4244: 'argument' : conversion from 'double' to 'float32', possible loss of data
-     1>Danger.cpp(100): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>Danger.cpp(106): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         Enemy.cpp
-     1>Enemy.cpp(14): warning C4100: '_position' : unreferenced formal parameter
-     1>Enemy.cpp(24): warning C4244: 'argument' : conversion from 'double' to 'float32', possible loss of data
-     1>Enemy.cpp(21): warning C4100: 'deltaTime' : unreferenced formal parameter
-         Health.cpp
-     1>Health.cpp(54): warning C4100: 'deltaTime' : unreferenced formal parameter
-         main.cpp
-     1>main.cpp(92): warning C4100: 'azColName' : unreferenced formal parameter
-     1>main.cpp(92): warning C4100: 'argc' : unreferenced formal parameter
-     1>main.cpp(92): warning C4100: 'NotUsed' : unreferenced formal parameter
-     1>main.cpp(207): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>main.cpp(230): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(230): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(236): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(236): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(254): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(254): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(260): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(260): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(268): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(268): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(273): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(273): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(283): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(283): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(295): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(295): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(301): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(301): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(324): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(324): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(329): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(329): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(335): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(335): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>main.cpp(196): warning C4100: 'esContext' : unreferenced formal parameter
-     1>main.cpp(372): warning C4100: 'esContext' : unreferenced formal parameter
-     1>main.cpp(384): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(471): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(487): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(497): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(507): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(514): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(514): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(514): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(524): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(525): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(526): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(715): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>main.cpp(725): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>main.cpp(763): warning C4100: 'argv' : unreferenced formal parameter
-     1>main.cpp(763): warning C4100: 'argc' : unreferenced formal parameter
-         Particles.cpp
-         Player.cpp
-     1>Player.cpp(84): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>Player.cpp(89): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>Player.cpp(96): warning C4482: nonstandard extension used: enum 'yam2d::KeyCodes' used in qualified name
-     1>Player.cpp(65): warning C4100: 'deltaTime' : unreferenced formal parameter
-         Save.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\TTI12SAskoL\Documents\GitHub\Rundom\yam2d\\engine\include\ /IC:\Users\TTI12SAskoL\Documents\GitHub\Rundom\yam2d\\engine\external\ /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Score.cpp
          Score.cpp
      1>Score.cpp(105): warning C4100: 'posY' : unreferenced formal parameter
      1>Score.cpp(105): warning C4100: 'posX' : unreferenced formal parameter
-         Spark.cpp
-     1>Spark.cpp(49): warning C4100: 'deltaTime' : unreferenced formal parameter
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\RundomTesti\Release\MapFromScratch.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\yam2d\\engine\lib\win32 sqlite3.lib irrKlang.lib libEGL.lib libGLES_cm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\MapFromScratch.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\RundomTesti\Release\MapFromScratch.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\TTI12SAskoL\Documents\GitHub\Rundom\RundomTesti\Release\MapFromScratch.lib" /MACHINE:X86 Release\BackGround.obj
          Release\Buttons.obj
@@ -115,4 +36,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:07.36
+Time Elapsed 00:00:04.74

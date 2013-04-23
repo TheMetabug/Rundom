@@ -65,7 +65,7 @@ void Danger::Update(float deltaTime)
 
 	if (speedy != 0)
 	{
-		danger->setPosition(vec2(danger->getPosition().x - speed*deltaTime, yspawn - sin(countd)/0.7f));
+		danger->setPosition(vec2(danger->getPosition().x - speed*deltaTime, yspawn - sin(countd + speedy)/0.7f));
 	}
 	else
 	{
