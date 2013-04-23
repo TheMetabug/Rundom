@@ -192,6 +192,11 @@ void writeHighScores(int x)
 
 }
 
+void PlayAuts();
+void PlayNom();
+void PlayNoo();
+void PlayHop();
+
 //			Initialize the game
 bool init ( ESContext *esContext )
 {	
@@ -274,8 +279,8 @@ bool init ( ESContext *esContext )
 	objectLayer1->addGameObject(danger2.danger);
 	dangers.push_back(danger2);
 
-	Texture* texturebgDDD =new Texture("danger.png");
-	danger3 = Danger(texturebgDDD,vec2(16,3.2f), 15.5f, 0, 50.0f, 50.0f, 13.0f, 3.2f, 1, 20.0f);
+	Texture* texturebgDDD =new Texture("cheeta.png");
+	danger3 = Danger(texturebgDDD,vec2(16,3.0f), 15.5f, 0, 94.0f, 80.0f, 13.0f, 3.0f, 6, 20.0f);
 	objectLayer1->addGameObject(danger3.danger);
 	dangers.push_back(danger3);
 
@@ -389,38 +394,7 @@ void update( ESContext* ctx, float deltaTime )
 
 	if(player.isHeJumping == true)
 	{
-		hoprand = rand() %80;
-		std::cout << hoprand << std::endl;
-		if(hoprand >= 0 && hoprand <=25)
-		{
-			hopphase = 1;
-		}
-		else if(hoprand >= 26 && hoprand <=45)
-		{
-			hopphase = 2;
-		}
-		else if(hoprand >= 46 && hoprand <=80)
-		{
-			hopphase = 3;
-		}
-
-		switch(hopphase%4)
-		{
-			case 0:
-				break;
-			case 1:
-				engine->play2D("hop2.wav", false);
-				hopphase = 0;
-				break;
-			case 2:
-				engine->play2D("hop4.wav", false);
-				hopphase = 0;
-				break;
-			case 3:
-				engine->play2D("hop1.wav", false);
-				hopphase = 0;
-				break;
-		}
+		PlayHop();
 	}
 
 	int number = button1.Update(deltaTime);
@@ -538,40 +512,7 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(isPlayerScreamed == false)
 					{
-						noorand = rand() %80;
-						//std::cout << noorand << std::endl;
-						if(noorand >= 0 && noorand <=25)
-						{
-							noophase = 1;
-						}
-						else if(noorand >= 26 && noorand <=45)
-						{
-							noophase = 2;
-						}
-						else if(noorand >= 46 && noorand <=80)
-						{
-							noophase = 3;
-						}
-					switch(noophase%3)
-					{
-					case 0:
-
-						break;
-					case 1:
-						engine->play2D("noo1.wav", false);
-						noophase = 0;
-						break;
-					case 2:
-						engine->play2D("noo2.wav", false);
-						noophase = 0;
-						break;
-					case 3:
-						engine->play2D("noo3.wav", false);
-						noophase = 0;
-						break;
-						}
-						isPlayerScreamed = true;
-						//engine->play2D("deathh1.wav", false);
+						PlayNoo();
 					}
 				}
 			
@@ -591,21 +532,7 @@ void update( ESContext* ctx, float deltaTime )
 				{
 					if(player.isHeDead == false)
 					{
-						switch(autsphase%3)
-								{
-									case 0:
-										engine->play2D("auts1.wav", false);
-										autsphase++;
-										break;
-									case 1:
-										engine->play2D("auts2.wav", false);
-										autsphase++;
-										break;
-									case 2:
-										engine->play2D("auts3.wav", false);
-										autsphase++;
-										break;
-								}
+						PlayAuts();
 						//engine->play2D("ouch.wav", false);
 					}
 					dangers[i].Respawn();
@@ -627,75 +554,30 @@ void update( ESContext* ctx, float deltaTime )
 				// Player pickups a bonus
 				if (notDanger.danger->collidesTo(player.player))
 				{
-					switch(nomphase%3)
-						{
-							case 0:
-								engine->play2D("omnom1.wav", false);
-								nomphase++;
-								break;
-							case 1:
-								engine->play2D("omnom2.wav", false);
-								nomphase++;
-								break;
-							case 2:
-								engine->play2D("omnom3.wav", false);
-								nomphase++;
-								break;
-						}
+					PlayNom();
 					//engine->play2D("pickup1.wav", false);
 					notDanger.Respawn();
 					health.Medkit();
 					score->strawberry();
 				}
 			}
-			// death by hippo
+			// Hit hippo
 			if (player.hitx <= -6.0f)
 			{
 				//health.hp = 0;
 				//player.Death();
+				PlayAuts();
+				player.Blink();
 				player.HippoHit();
 				if(player.isHeDead == true)
 				{
 					if(isPlayerScreamed == false)
 					{
-						noorand = rand() %80;
-						//std::cout << noorand << std::endl;
-						if(noorand >= 0 && noorand <=25)
-						{
-							noophase = 1;
-						}
-						else if(noorand >= 26 && noorand <=45)
-						{
-							noophase = 2;
-						}
-						else if(noorand >= 46 && noorand <=80)
-						{
-							noophase = 3;
-						}
-					switch(noophase%3)
-					{
-					case 0:
-
-						break;
-					case 1:
-						engine->play2D("noo1.wav", false);
-						noophase = 0;
-						break;
-					case 2:
-						engine->play2D("noo2.wav", false);
-						noophase = 0;
-						break;
-					case 3:
-						engine->play2D("noo3.wav", false);
-						noophase = 0;
-						break;
-						}
-						isPlayerScreamed = true;
-						//engine->play2D("death1.wav", false);
+						PlayNoo();
 					}
 				}
 			}
-
+		
 			if (player.hity >= 40.0f)
 			{
 				dangers[0].Respawn();
@@ -739,9 +621,7 @@ void update( ESContext* ctx, float deltaTime )
 		}
 		break;
 	}
-}
-
-	
+}	
 
 //			Draw game
 void draw ( ESContext *esContext )
@@ -776,4 +656,149 @@ int main ( int argc, char *argv[] )
 
 	esMainLoop ( &esContext );
 	return 0;
+}
+
+void PlayAuts()
+{
+	autsrand = rand() %80;
+	std::cout << autsrand << std::endl;
+	if(autsrand >= 0 && autsrand <=25)
+	{
+		autsphase = 1;
+	}
+	if(autsrand >= 26 && autsrand <=45)
+	{
+		autsphase = 2;
+	}
+	if(autsrand >= 46 && autsrand <=80)
+	{
+		autsphase = 3;
+	}
+	switch(autsphase)
+	{
+		case 0:
+			break;
+		case 1:
+			engine->play2D("auts1.wav", false);
+			autsphase = 0;
+			break;
+		case 2:
+			engine->play2D("auts2.wav", false);
+			autsphase = 0;
+			break;
+		case 3:
+			std::cout << "auts" << std::endl;
+			engine->play2D("auts3.wav", false);
+			autsphase = 0;
+			break;
+	}
+
+}
+
+void PlayNom()
+{
+	nomrand = rand() %80;
+	std::cout << hoprand << std::endl;
+	if(nomrand >= 0 && nomrand <=25)
+	{
+		nomphase = 1;
+	}
+	else if(nomrand >= 26 && nomrand <=45)
+	{
+		hopphase = 2;
+	}
+	else if(nomrand >= 46 && nomrand <=80)
+	{
+		nomphase = 3;
+	}
+	switch(nomphase)
+	{
+		case 0:
+			break;
+		case 1:
+			engine->play2D("omnom1.wav", false);
+			nomphase++;
+			break;
+		case 2:
+			engine->play2D("omnom2.wav", false);
+			nomphase++;
+			break;
+		case 3:
+			engine->play2D("omnom3.wav", false);
+			nomphase++;
+			break;
+	}
+
+}
+void PlayNoo()
+{
+	noorand = rand() %80;
+	//std::cout << noorand << std::endl;
+	if(noorand >= 0 && noorand <=25)
+	{
+		noophase = 1;
+	}
+	else if(noorand >= 26 && noorand <=45)
+	{
+		noophase = 2;
+	}
+	else if(noorand >= 46 && noorand <=80)
+	{
+		noophase = 3;
+	}
+	switch(noophase)
+	{
+		case 0:
+			break;
+		case 1:
+			engine->play2D("deathh1.wav", false);
+			noophase = 0;
+			break;
+		case 2:
+			engine->play2D("noo2.wav", false);
+			noophase = 0;
+			break;
+		case 3:
+			engine->play2D("noo3.wav", false);
+			noophase = 0;
+			break;
+			}
+			isPlayerScreamed = true;
+			//engine->play2D("death1.wav", false);
+
+}
+void PlayHop()
+{
+	hoprand = rand() %80;
+		std::cout << hoprand << std::endl;
+		if(hoprand >= 0 && hoprand <=25)
+		{
+			hopphase = 1;
+		}
+		else if(hoprand >= 26 && hoprand <=45)
+		{
+			hopphase = 2;
+		}
+		else if(hoprand >= 46 && hoprand <=80)
+		{
+			hopphase = 3;
+		}
+
+		switch(hopphase)
+		{
+			case 0:
+				break;
+			case 1:
+				engine->play2D("hop2.wav", false);
+				hopphase = 0;
+				break;
+			case 2:
+				engine->play2D("hop4.wav", false);
+				hopphase = 0;
+				break;
+			case 3:
+				engine->play2D("hop1.wav", false);
+				hopphase = 0;
+				break;
+		}
 }

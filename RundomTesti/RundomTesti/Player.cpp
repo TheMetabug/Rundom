@@ -219,7 +219,7 @@ void Player::Update(float deltaTime)
 			}
 			break;
 		}
-		std::cout << blinkTime << std::endl;
+		//std::cout << blinkTime << std::endl;
 		blinkTime--;
 	}
 
